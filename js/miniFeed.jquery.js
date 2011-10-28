@@ -1,5 +1,5 @@
 (function() {
-  jQuery(function() {
+  $(function() {
     $.miniFeed = function(element, options) {
       var setState, showAnimateProperties, state;
       this.defaults = {
@@ -52,9 +52,9 @@
     return $.fn.miniFeed = function(options) {
       return this.each(function() {
         var plugin;
-        if (void 0 === ($(this)).data('miniFeed')) {
+        if ($(this).data('miniFeed') === void 0) {
           plugin = new $.miniFeed(this, options);
-          return ($(this)).data('miniFeed', plugin);
+          return $(this).data('miniFeed', plugin);
         }
       });
     };
