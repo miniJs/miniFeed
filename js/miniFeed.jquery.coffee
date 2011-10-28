@@ -10,37 +10,32 @@ $ ->
   $.miniFeed = (element, options) ->
     # default plugin settings
     @defaults = {
-      username:           'matthieu_tweets'                # twitter username
-      list:               null                             # list name to get the tweets from
-      limit:              6                                # number of tweets to be displayed
+      username:             'mattaussaguel'                  # twitter username
+      list:                 null                             # list name to get the tweets from
+      limit:                6                                # number of tweets to be displayed
 
-      template:           '{avatar}{tweet}{date}{time}'    # tweet format
-      introText:          null                             # text to prepend tweets
-      outroText:          null                             # text to append tweets
+      template:             '{avatar}{tweet}{date}{time}'    # tweet format
+      introText:            null                             # text to prepend every tweet
+      outroText:            null                             # text to append every tweet
 
-      className:          'mini-feed'                      # class added to the <ul> generated element
-      firstClass:         'first'                          # class added to the first tweet
-      lastClass:          'last'                           # class added to the last tweet
+      className:            'mini-feed'                      # class added to the <ul/> generated element
+      firstClass:           'first'                          # class added to the first tweet
+      lastClass:            'last'                           # class added to the last tweet
 
-      avatarSize:         '48px'                           # avatar size in pixels
+      avatarSize:           '48px'                           # avatar size in pixels
 
-      showFavorites:      true                             # show account favorites
-      showReplies:        true                             # show account replies
-      showRetweets:       true                             # show account retweets
+      showRetweets:         true                             # show account retweets
 
-      showOnlyFavorites:  true                             # show account favorites
-      showOnlyReplies:    true                             # show account replies
-      showOnlyRetweets:   true                             # show account retweets
+      showOnlyFavorites:    true                             # show account favorites
 
-      timeFormat:         'normal'                         # time format 'normal' | 'elapsed'
-      timeClass:          null                             # class added to the time wrapper
+      timeFormat:           'normal'                         # time format 'normal' | 'elapsed'
+      timeClass:            null                             # class added to the time wrapper
+      dateClass:            null                             # class added to the date wrapper
 
-      dateClass:          null                             # class added to the date wrapper
+      onLoad:               ->                               # Function() called when the tweets are loading,
+      onVisible:            ->                               # Function(feed) called when miniTweet is hidden
 
-      onLoad:             ->                               # Function() called when the tweets are being loaded,
-      onVisible:          ->                               # Function(feed) called when miniTweet is hidden
-
-      showAnimateProperties : {}                               # animate properties on show, will fadeIn by default
+      showAnimateProperties: {}                               # animate properties on show, will fadeIn by default
     }
 
     ## private variables
@@ -62,6 +57,19 @@ $ ->
     setState = (_state) ->
       state = _state
 
+    make_url = =>
+      url = "http://api.twitter.com/"
+      if @getSetting('list')? 
+        url += "1/#{@getSetting('username')}/lists/#{@getSetting('list')}/statuses.json?"
+      else if @getSetting('showOnlyFavorites')? 
+        url += "favorites/#{@getSetting('username')}.json?"
+      else
+        url =  "http://api.twitter.com/1/statuses/user_timeline.json?"
+        url += "screen_name=#{@getSetting('username')}"
+      url += "&count=#{@getSetting('limit')}"
+      url += "&include_rts=1" if @getSetting('showRetweets')
+      url += "&callback=?"
+
     ## public methods
     #get current state
     @getState = ->
@@ -78,6 +86,9 @@ $ ->
     # init function
     @init = ->
       @settings = $.extend {}, @defaults, options
+      $.getJSON(make_url(), (data) ->
+        console.log data
+      )
 
     # end init method
 

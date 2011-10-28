@@ -1,3 +1,3 @@
 $(function() {
-  $('#mini-feed').miniFeed({username: 'matthieu_tweets'});
+  $('#mini-feed').miniFeed({limit: 2});
 });
