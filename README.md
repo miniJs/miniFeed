@@ -1,10 +1,7 @@
 # miniFeed jQuery Plugin
 
-By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @matthieu_tweets
+By: Matthieu Aussaguel, http://mynameismatthieu.com, @mattaussaguel
 
-jQuery Plugin Boilerplate written in CoffeeScript to help you create plugins in a clean and quick way.
-
-# miniTip jQuery Plugin (__written in CoffeeScript__)
 
 The Twitter jQuery Plugin you've always been looking for.
 
@@ -12,7 +9,7 @@ miniFeed is very basic but powerful twitter jQuery plugin that allows you to sho
 
 If you have any question of find a bug, please raise it <a href="https://github.com/MatthieuA/miniFeed/issues">at GitHub</a> or <a href="http://www.twitter.com/matthieu_tweets">on Twitter</a>.
 
-h2. Info
+### Info
 
 Developed by "Matthieu Aussaguel":mailto:matthieu.aussaguel@gmail.com, "mynameismatthieu.com":http://mynameismatthieu.com
 
@@ -29,7 +26,7 @@ For updates, follow Matthieu on "Twitter":http://twitter.com/matthieu_tweets
 #### Javascript
 
     $('#mini-feed').miniFeed({
-                   username  : 'matthieu_tweets'
+                   username  : 'mattaussaguel'
                    });
 
 ### Website Url
