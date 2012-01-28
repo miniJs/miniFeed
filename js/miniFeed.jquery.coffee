@@ -6,12 +6,52 @@
 # Updated: July 6th, 2011
 #
 
+class Tweet
+  # Class variables
+  @urlRegex:  -> /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi
+  @userRegex: -> /[\@]+([A-Za-z0-9-_]+)/gi
+  @hashRegex: -> /\s[\#]+([A-Za-z0-9-_]+)/gi
+
+  constructor: (@tweet, @options) ->
+
+  formatText: ->
+    tweet = @tweet.text
+    tweet = tweet.replace(Tweet.urlRegex(),"<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
+    tweet = tweet.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
+    tweet.replace(Tweet.hashRegex(), "<a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a>")
+
+  format: ->
+    tweet =  ""
+    tweet += @options.introText unless @options.introText is null
+    tweet += @formatText()
+    tweet += @options.outroText unless @options.outroText is null
+    
+
+  cssClass: (index, size) ->
+    return @options.firstClass if index is 0
+    return @options.lastClass  if index is (size - 1)
+
+  # Class methods
+  @apiUrl: (username, limit, showRetweets) ->
+    apiUrl =  "http://api.twitter.com/1/statuses/user_timeline.json?"
+    apiUrl += "screen_name=#{username}"
+    apiUrl += "&count=#{limit}"
+    apiUrl += "&include_rts=1" if showRetweets
+    apiUrl += "&callback=?"
+    apiUrl
+
+  @formattedTweets: (tweets) ->
+    $ul = $("<ul />")
+    size = tweets.length
+    for tweet, index in tweets
+      $("<li />", {"html" : tweet.format(), "class" : tweet.cssClass(index, size)}).appendTo($ul) 
+    $ul   
+
 $ ->
   $.miniFeed = (element, options) ->
     # default plugin settings
     @defaults = {
       username:             'mattaussaguel'                  # twitter username
-      list:                 null                             # list name to get the tweets from
       limit:                6                                # number of tweets to be displayed
 
       template:             '{avatar}{tweet}{date}{time}'    # tweet format
@@ -25,8 +65,6 @@ $ ->
       avatarSize:           '48px'                           # avatar size in pixels
 
       showRetweets:         true                             # show account retweets
-
-      showOnlyFavorites:    true                             # show account favorites
 
       timeFormat:           'normal'                         # time format 'normal' | 'elapsed'
       timeClass:            null                             # class added to the time wrapper
@@ -42,6 +80,9 @@ $ ->
     # current state
     state = ''
 
+    # an array of Tweet
+    tweets = []
+
     # show animate properties
     showAnimateProperties = { opacity : 1 }
 
@@ -54,43 +95,40 @@ $ ->
 
     ## private methods
     # set current state
-    setState = (_state) ->
-      state = _state
+    setState = (_state) -> state = _state      
 
-    make_url = =>
-      url = "http://api.twitter.com/"
-      if @getSetting('list')? 
-        url += "1/#{@getSetting('username')}/lists/#{@getSetting('list')}/statuses.json?"
-      else if @getSetting('showOnlyFavorites')? 
-        url += "favorites/#{@getSetting('username')}.json?"
-      else
-        url =  "http://api.twitter.com/1/statuses/user_timeline.json?"
-        url += "screen_name=#{@getSetting('username')}"
-      url += "&count=#{@getSetting('limit')}"
-      url += "&include_rts=1" if @getSetting('showRetweets')
-      url += "&callback=?"
+    tweetFactory = (data) => tweets.push new Tweet(tweet, @settings) for tweet in data
+
+    showTweets = => 
+      setState 'loading'
+
+      # fetch the tweets
+      $.getJSON(Tweet.apiUrl(@getSetting('username'), @getSetting('limit'), @getSetting('showRetweets')), (data) ->
+        setState 'formatting'
+        tweetFactory(data)
+        $(element).append(Tweet.formattedTweets(tweets))
+        setState 'loaded'
+      )
 
     ## public methods
     #get current state
-    @getState = ->
-      state
+    @getState = -> state
+
+    @getTweets = -> tweets
 
     # get particular plugin setting
-    @getSetting = (settingKey) ->
-      @settings[settingKey]
+    @getSetting = (settingKey) -> @settings[settingKey]
 
     # call one of the plugin setting functions
-    @callSettingFunction = (functionName) ->
-      @settings[functionName]()
+    @callSettingFunction = (functionName) -> @settings[functionName]()
 
     # init function
     @init = ->
       @settings = $.extend {}, @defaults, options
-      $.getJSON(make_url(), (data) ->
-        console.log data
-      )
 
-    # end init method
+      setState 'initialising'
+
+      showTweets()
 
     # initialise the plugin
     @init()
