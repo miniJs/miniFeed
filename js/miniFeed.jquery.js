@@ -90,6 +90,7 @@
       _ref = this.tweets;
       for (index = 0, _len = _ref.length; index < _len; index++) {
         tweet = _ref[index];
+        console.log(tweet);
         $li = $('<li />', {
           'class': tweet.cssClass(index, this.size)
         });
@@ -123,7 +124,6 @@
         lastClass: 'last',
         avatarSize: '48',
         showRetweets: true,
-        showTime: true,
         timeFormat: 'normal',
         timeClass: null,
         dateClass: null,

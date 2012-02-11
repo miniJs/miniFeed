@@ -57,6 +57,7 @@ class TweetCollection
   list: ->
     $ul = $('<ul />', { 'class': @options.className })
     for tweet, index in @tweets
+      console.log tweet
       $li = $('<li />', { 'class' : tweet.cssClass(index, @size) })
       $li.append tweet.avatar()
       $li.append tweet.text()
@@ -87,7 +88,6 @@ $ ->
 
       showRetweets:         true                             # show account retweets
 
-      showTime:             true                             # show time after every tweet
       timeFormat:           'normal'                         # time format 'normal' | 'elapsed'
       timeClass:            null                             # class added to the time wrapper
       dateClass:            null                             # class added to the date wrapper
