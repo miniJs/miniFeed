@@ -8,10 +8,10 @@
 
 class Tweet
   # Class variables
-  @urlRegex:  -> /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi
-  @userRegex: -> /[\@]+([A-Za-z0-9-_]+)/gi
-  @hashRegex: -> /\s[\#]+([A-Za-z0-9-_]+)/gi
-  @templateKeys: -> ['avatar', 'tweet', 'time']
+  @urlRegex:      -> /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi
+  @userRegex:     -> /[\@]+([A-Za-z0-9-_]+)/gi
+  @hashRegex:     -> /\s[\#]+([A-Za-z0-9-_]+)/gi
+  @templateKeys:  -> ['avatar', 'tweet', 'time']
 
   constructor: (@data, @options) ->
 
@@ -21,10 +21,11 @@ class Tweet
     template
 
   tweet: ->
-    tweet = ''
-    tweet = "<span class='intro-text'>#{@options.introText}</span>" unless @options.introText is null
+    tweet =  ''
+    tweet =  "<span class='intro-text'>#{@options.introText}</span>" unless @options.introText is null
     tweet += @originalText() 
     tweet += "<span class='outro-text'>#{@options.outroText}</span>" unless @options.outroText is null
+
     "<span class='#{@options.tweetClass}'>#{tweet}</span>"
     
   avatar: ->
