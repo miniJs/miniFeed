@@ -37,10 +37,10 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
-- handle the template
 - adapt the avatar size
 - manage time format
 - add time class
+- handle the template
 
 - call onLoad
 - call onVisible
