@@ -37,8 +37,6 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
-	- handle the template
-# 
 	- call onLoad
 	- call onVisible
 	- call showAnimateProperties

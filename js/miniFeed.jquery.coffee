@@ -11,25 +11,31 @@ class Tweet
   @urlRegex:  -> /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi
   @userRegex: -> /[\@]+([A-Za-z0-9-_]+)/gi
   @hashRegex: -> /\s[\#]+([A-Za-z0-9-_]+)/gi
+  @templateKeys: -> ['avatar', 'tweet', 'time']
 
-  constructor: (@tweet, @options) ->
+  constructor: (@data, @options) ->
 
-  text: ->
-    text = ''
-    text = "<span class='intro-text'>#{@options.introText}</span>" unless @options.introText is null
-    text += @originalText() 
-    text += "<span class='outro-text'>#{@options.outroText}</span>" unless @options.outroText is null
-    $('<span />', { 'class': @options.tweetClass }).append text
+  content: ->
+    template = @options.template
+    template = template.replace "{#{key}}", @[key]() for key in Tweet.templateKeys()
+    template
+
+  tweet: ->
+    tweet = ''
+    tweet = "<span class='intro-text'>#{@options.introText}</span>" unless @options.introText is null
+    tweet += @originalText() 
+    tweet += "<span class='outro-text'>#{@options.outroText}</span>" unless @options.outroText is null
+    "<span class='#{@options.tweetClass}'>#{tweet}</span>"
     
   avatar: ->
-    $('<img />', { 'src': @avatarUrl(), 'class': @options.avatarClass, 'title': @options.username, 'height': @options.avatarSize, 'width': @options.avatarSize })
+    "<img src='#{@avatarUrl()}' class='#{@options.avatarClass}' title='#{@options.username}' height='#{@options.avatarSize}' width='#{@options.avatarSize}'/>"
 
   time: ->
-    time = new Time(@tweet.created_at, @options.timeFormat)
-    $('<span />', { 'class': @options.timeClass, 'html': time.formatted() })
+    time = new Time(@data.created_at, @options.timeFormat)
+    "<span class='#{@options.timeClass}'>#{time.formatted()}</span>"
 
   originalText: ->
-    originalText = @tweet.text
+    originalText = @data.text
     originalText = originalText.replace(Tweet.urlRegex(),"<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
     originalText = originalText.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
     originalText.replace(Tweet.hashRegex(), " <a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a> ")
@@ -38,7 +44,7 @@ class Tweet
     return @options.firstClass if index is 0
     return @options.lastClass  if index is (size - 1)
 
-  avatarUrl: -> @tweet.user.profile_image_url
+  avatarUrl: -> @data.user.profile_image_url
 
   # class methods
   @apiUrl: (options) ->
@@ -60,9 +66,7 @@ class TweetCollection
     $ul = $('<ul />', { 'class': @options.className })
     for tweet, index in @tweets
       $li = $('<li />', { 'class' : tweet.listItemClass(index, @size) })
-      $li.append tweet.avatar()
-      $li.append tweet.text()
-      $li.append tweet.time()
+      $li.append tweet.content()
       $li.appendTo $ul 
     $ul
 
@@ -112,7 +116,7 @@ $ ->
       username:             'mattaussaguel'                  # twitter username
       limit:                4                                # number of tweets to be displayed
 
-      template:             '{avatar}{tweet}{date}{time}'    # tweet format
+      template:             '{avatar}{tweet}{time}'          # tweet template format
       introText:            null                             # text to prepend every tweet
       outroText:            null                             # text to append every tweet
 

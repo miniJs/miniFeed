@@ -11,44 +11,46 @@
     Tweet.hashRegex = function() {
       return /\s[\#]+([A-Za-z0-9-_]+)/gi;
     };
-    function Tweet(tweet, options) {
-      this.tweet = tweet;
+    Tweet.templateKeys = function() {
+      return ['avatar', 'tweet', 'time'];
+    };
+    function Tweet(data, options) {
+      this.data = data;
       this.options = options;
     }
-    Tweet.prototype.text = function() {
-      var text;
-      text = '';
+    Tweet.prototype.content = function() {
+      var key, template, _i, _len, _ref;
+      template = this.options.template;
+      _ref = Tweet.templateKeys();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        key = _ref[_i];
+        template = template.replace("{" + key + "}", this[key]());
+      }
+      return template;
+    };
+    Tweet.prototype.tweet = function() {
+      var tweet;
+      tweet = '';
       if (this.options.introText !== null) {
-        text = "<span class='intro-text'>" + this.options.introText + "</span>";
+        tweet = "<span class='intro-text'>" + this.options.introText + "</span>";
       }
-      text += this.originalText();
+      tweet += this.originalText();
       if (this.options.outroText !== null) {
-        text += "<span class='outro-text'>" + this.options.outroText + "</span>";
+        tweet += "<span class='outro-text'>" + this.options.outroText + "</span>";
       }
-      return $('<span />', {
-        'class': this.options.tweetClass
-      }).append(text);
+      return "<span class='" + this.options.tweetClass + "'>" + tweet + "</span>";
     };
     Tweet.prototype.avatar = function() {
-      return $('<img />', {
-        'src': this.avatarUrl(),
-        'class': this.options.avatarClass,
-        'title': this.options.username,
-        'height': this.options.avatarSize,
-        'width': this.options.avatarSize
-      });
+      return "<img src='" + (this.avatarUrl()) + "' class='" + this.options.avatarClass + "' title='" + this.options.username + "' height='" + this.options.avatarSize + "' width='" + this.options.avatarSize + "'/>";
     };
     Tweet.prototype.time = function() {
       var time;
-      time = new Time(this.tweet.created_at, this.options.timeFormat);
-      return $('<span />', {
-        'class': this.options.timeClass,
-        'html': time.formatted()
-      });
+      time = new Time(this.data.created_at, this.options.timeFormat);
+      return "<span class='" + this.options.timeClass + "'>" + (time.formatted()) + "</span>";
     };
     Tweet.prototype.originalText = function() {
       var originalText;
-      originalText = this.tweet.text;
+      originalText = this.data.text;
       originalText = originalText.replace(Tweet.urlRegex(), "<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
       originalText = originalText.replace(Tweet.userRegex(), "<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
       return originalText.replace(Tweet.hashRegex(), " <a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a> ");
@@ -62,7 +64,7 @@
       }
     };
     Tweet.prototype.avatarUrl = function() {
-      return this.tweet.user.profile_image_url;
+      return this.data.user.profile_image_url;
     };
     Tweet.apiUrl = function(options) {
       var apiUrl;
@@ -101,9 +103,7 @@
         $li = $('<li />', {
           'class': tweet.listItemClass(index, this.size)
         });
-        $li.append(tweet.avatar());
-        $li.append(tweet.text());
-        $li.append(tweet.time());
+        $li.append(tweet.content());
         $li.appendTo($ul);
       }
       return $ul;
@@ -166,7 +166,7 @@
       this.defaults = {
         username: 'mattaussaguel',
         limit: 4,
-        template: '{avatar}{tweet}{date}{time}',
+        template: '{avatar}{tweet}{time}',
         introText: null,
         outroText: null,
         listClass: 'tweet-list',
