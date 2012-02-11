@@ -3,7 +3,7 @@
 # Instructions: Coming Soon
 # By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @matthieu_tweets
 # Version: 0.1 alpha 1.0
-# Updated: July 6th, 2011
+# Updated: February 11, 2012
 #
 
 class Tweet
