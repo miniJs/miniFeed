@@ -25,9 +25,7 @@ For updates, follow Matthieu on "Twitter":http://twitter.com/matthieu_tweets
 
 #### Javascript
 
-    $('#mini-feed').miniFeed({
-                   username  : 'mattaussaguel'
-                   });
+    $('#mini-feed').miniFeed({ username  : 'mattaussaguel' });
 
 ### Website Url
 coming soon
