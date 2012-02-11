@@ -165,7 +165,7 @@
       var setState, showAnimateProperties, showTweets, state;
       this.defaults = {
         username: 'mattaussaguel',
-        limit: 4,
+        limit: 6,
         template: '{avatar}{tweet}{time}',
         introText: null,
         outroText: null,

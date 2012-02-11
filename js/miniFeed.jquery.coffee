@@ -115,7 +115,7 @@ $ ->
     # default plugin settings
     @defaults = {
       username:             'mattaussaguel'                  # twitter username
-      limit:                4                                # number of tweets to be displayed
+      limit:                6                                # number of tweets to be displayed
 
       template:             '{avatar}{tweet}{time}'          # tweet template format
       introText:            null                             # text to prepend every tweet
