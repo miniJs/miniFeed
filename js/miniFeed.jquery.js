@@ -81,6 +81,7 @@
         lastClass: 'last',
         avatarSize: '48px',
         showRetweets: true,
+        showTime: true,
         timeFormat: 'normal',
         timeClass: null,
         dateClass: null,
