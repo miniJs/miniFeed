@@ -119,12 +119,40 @@
     return TweetCollection;
   })();
   Time = (function() {
-    function Time(time, format) {
-      this.time = time;
+    function Time(time_string, format) {
       this.format = format;
+      this.time = this.parseTimeString(time_string);
     }
     Time.prototype.formatted = function() {
-      return this.time;
+      if (this.format === "normal") {
+        this.normalFormat();
+      }
+      return this.relativeFormat();
+    };
+    Time.prototype.relativeFormat = function() {
+      var delta, relative_to;
+      relative_to = new Date();
+      delta = parseInt((relative_to.getTime() - this.time) / 1000);
+      if (delta < 60) {
+        return 'less than a minute ago';
+      } else if (delta < (60 * 60)) {
+        return 'about ' + this.pluralize("minute", parseInt(delta / 60)) + ' ago';
+      } else if (delta < (24 * 60 * 60)) {
+        return 'about ' + this.pluralize("hour", parseInt(delta / 3600)) + ' ago';
+      } else {
+        return 'about ' + this.pluralize("day", parseInt(delta / 86400)) + ' ago';
+      }
+    };
+    Time.prototype.pluralize = function(word, n) {
+      var plural;
+      plural = "" + n + " " + word;
+      if (n > 1) {
+        plural += "s";
+      }
+      return plural;
+    };
+    Time.prototype.parseTimeString = function(time_string) {
+      return Date.parse(time_string.replace(/^([a-z]{3})( [a-z]{3} \d\d?)(.*)( \d{4})$/i, '$1,$2$4$3'));
     };
     return Time;
   })();
@@ -144,7 +172,7 @@
         avatarClass: 'tweet-avatar',
         tweetClass: 'tweet-text',
         showRetweets: true,
-        timeFormat: 'normal',
+        timeFormat: 'relative',
         timeClass: 'tweet-time',
         onLoad: function() {},
         onVisible: function() {},

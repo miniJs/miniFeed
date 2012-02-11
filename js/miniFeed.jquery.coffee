@@ -72,10 +72,34 @@ class TweetCollection
     $wrapper
 
 class Time
-  constructor: (@time, @format) ->
+  constructor: (time_string, @format) ->
+    @time = @parseTimeString time_string
 
   formatted: ->
-    @time
+    @normalFormat() if @format is "normal"
+    @relativeFormat()
+
+  relativeFormat: ->
+    relative_to = new Date();
+    delta = parseInt((relative_to.getTime() - @time) / 1000);
+
+    if delta < 60
+      'less than a minute ago'
+    else if delta < (60*60)
+      'about ' + @pluralize("minute", parseInt(delta / 60)) + ' ago'
+    else if delta < (24*60*60)
+      'about ' + @pluralize("hour", parseInt(delta / 3600)) + ' ago'
+    else
+      'about ' + @pluralize("day", parseInt(delta / 86400)) + ' ago'
+
+  pluralize: (word, n) ->
+    plural = "#{n} #{word}"
+    plural += "s" if n > 1
+    plural
+
+  parseTimeString: (time_string) ->
+    Date.parse(time_string.replace(/^([a-z]{3})( [a-z]{3} \d\d?)(.*)( \d{4})$/i, '$1,$2$4$3'))
+      
 
 $ ->
   $.miniFeed = (element, options) ->
@@ -95,10 +119,10 @@ $ ->
       avatarSize:           '48'                             # avatar size in pixels
       avatarClass:          'tweet-avatar'                   # avatar class name
 
-      tweetClass:          'tweet-text'                     # class added the text wrapper
+      tweetClass:          'tweet-text'                      # class added the text wrapper
       showRetweets:         true                             # show account retweets
 
-      timeFormat:           'normal'                         # time format 'normal' | 'elapsed'
+      timeFormat:           'relative'                       # time format 'normal' | 'elapsed'
       timeClass:            'tweet-time'                     # class added to the time wrapper
 
       onLoad:               ->                               # Function() called when the tweets are loading,
