@@ -37,8 +37,6 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
-	- manage time format
-	- add time class
 	- handle the template
 # 
 	- call onLoad

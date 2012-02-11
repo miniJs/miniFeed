@@ -72,16 +72,20 @@ class TweetCollection
     $wrapper
 
 class Time
-  constructor: (time_string, @format) ->
-    @time = @parseTimeString time_string
+  constructor: (time, @format) ->
+    @time = time.replace(/^([a-z]{3})( [a-z]{3} \d\d?)(.*)( \d{4})$/i, '$1,$2$4$3')
+    @date = new Date @time
 
   formatted: ->
-    @normalFormat() if @format is "normal"
+    return @normalFormat() if @format is "normal"
     @relativeFormat()
 
+  normalFormat: ->
+    @date.toDateString()
+
   relativeFormat: ->
-    relative_to = new Date();
-    delta = parseInt((relative_to.getTime() - @time) / 1000);
+    relative_to = new Date()
+    delta = parseInt((relative_to.getTime() - @parsedDate()) / 1000);
 
     if delta < 60
       'less than a minute ago'
@@ -97,8 +101,8 @@ class Time
     plural += "s" if n > 1
     plural
 
-  parseTimeString: (time_string) ->
-    Date.parse(time_string.replace(/^([a-z]{3})( [a-z]{3} \d\d?)(.*)( \d{4})$/i, '$1,$2$4$3'))
+  parsedDate: ->
+    Date.parse @time
       
 
 $ ->

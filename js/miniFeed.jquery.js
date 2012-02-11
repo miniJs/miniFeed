@@ -119,20 +119,24 @@
     return TweetCollection;
   })();
   Time = (function() {
-    function Time(time_string, format) {
+    function Time(time, format) {
       this.format = format;
-      this.time = this.parseTimeString(time_string);
+      this.time = time.replace(/^([a-z]{3})( [a-z]{3} \d\d?)(.*)( \d{4})$/i, '$1,$2$4$3');
+      this.date = new Date(this.time);
     }
     Time.prototype.formatted = function() {
       if (this.format === "normal") {
-        this.normalFormat();
+        return this.normalFormat();
       }
       return this.relativeFormat();
+    };
+    Time.prototype.normalFormat = function() {
+      return this.date.toDateString();
     };
     Time.prototype.relativeFormat = function() {
       var delta, relative_to;
       relative_to = new Date();
-      delta = parseInt((relative_to.getTime() - this.time) / 1000);
+      delta = parseInt((relative_to.getTime() - this.parsedDate()) / 1000);
       if (delta < 60) {
         return 'less than a minute ago';
       } else if (delta < (60 * 60)) {
@@ -151,8 +155,8 @@
       }
       return plural;
     };
-    Time.prototype.parseTimeString = function(time_string) {
-      return Date.parse(time_string.replace(/^([a-z]{3})( [a-z]{3} \d\d?)(.*)( \d{4})$/i, '$1,$2$4$3'));
+    Time.prototype.parsedDate = function() {
+      return Date.parse(this.time);
     };
     return Time;
   })();
