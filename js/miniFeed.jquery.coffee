@@ -66,6 +66,7 @@ $ ->
 
       showRetweets:         true                             # show account retweets
 
+      showTime:             true                             # show time after every tweet
       timeFormat:           'normal'                         # time format 'normal' | 'elapsed'
       timeClass:            null                             # class added to the time wrapper
       dateClass:            null                             # class added to the date wrapper
