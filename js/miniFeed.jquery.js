@@ -24,13 +24,13 @@
     };
     Tweet.prototype.format = function() {
       var tweet;
-      tweet = "";
+      tweet = '';
       if (this.options.introText !== null) {
-        tweet += this.options.introText;
+        tweet += "<span class='intro-text'>" + this.options.introText + "</span>";
       }
       tweet += this.formatText();
       if (this.options.outroText !== null) {
-        tweet += this.options.outroText;
+        tweet += "<span class='outro-text'>" + this.options.outroText + "</span>";
       }
       return tweet;
     };

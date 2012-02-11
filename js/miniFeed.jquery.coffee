@@ -21,10 +21,10 @@ class Tweet
     tweet.replace(Tweet.hashRegex(), "<a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a>")
 
   format: ->
-    tweet =  ""
-    tweet += @options.introText unless @options.introText is null
+    tweet =  ''
+    tweet += "<span class='intro-text'>#{@options.introText}</span>" unless @options.introText is null
     tweet += @formatText()
-    tweet += @options.outroText unless @options.outroText is null
+    tweet += "<span class='outro-text'>#{@options.outroText}</span>" unless @options.outroText is null
     tweet
     
 

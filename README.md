@@ -37,8 +37,6 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
-- add intro text
-- add outro text
 - handle the template
 - adapt the avatar size
 - manage time format
