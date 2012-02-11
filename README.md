@@ -37,10 +37,6 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
-	- call onLoad
-	- call onVisible
-	- call showAnimateProperties
-# 
 	- create demo page
 	- manual testing on ie/firefox/safari/chrome
 	- add tests (jasmine)

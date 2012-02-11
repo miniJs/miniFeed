@@ -159,6 +159,7 @@ $ ->
     setState = (_state) -> state = _state      
 
     showTweets = => 
+      @callSettingFunction 'onLoad'
       setState 'loading'
 
       # fetch the tweets
@@ -168,6 +169,7 @@ $ ->
         @$element.append(tweetCollection
                  .formattedTweets())
                  .animate(@settings.showAnimateProperties)
+        @callSettingFunction 'onVisible'
         setState 'loaded'
       )
 

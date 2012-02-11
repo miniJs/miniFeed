@@ -192,12 +192,14 @@
         return state = _state;
       };
       showTweets = __bind(function() {
+        this.callSettingFunction('onLoad');
         setState('loading');
         return $.getJSON(Tweet.apiUrl(this.settings), __bind(function(data) {
           var tweetCollection;
           setState('formatting');
           tweetCollection = new TweetCollection(data, this.settings);
           this.$element.append(tweetCollection.formattedTweets()).animate(this.settings.showAnimateProperties);
+          this.callSettingFunction('onVisible');
           return setState('loaded');
         }, this));
       }, this);
