@@ -96,7 +96,7 @@ $ ->
       onLoad:               ->                               # Function() called when the tweets are loading,
       onVisible:            ->                               # Function(feed) called when miniTweet is hidden
 
-      showAnimateProperties: {}                               # animate properties on show, will fadeIn by default
+      showAnimateProperties: {}                              # animate properties on show, will fadeIn by default
     }
 
     ## private variables

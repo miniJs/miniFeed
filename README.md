@@ -37,17 +37,17 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
-- manage time format
-- add time class
-- handle the template
-
-- call onLoad
-- call onVisible
-- call showAnimateProperties
-
-- create demo page
-- manual testing on ie/firefox/safari/chrome
-- add tests (jasmine)
+	- manage time format
+	- add time class
+	- handle the template
+# 
+	- call onLoad
+	- call onVisible
+	- call showAnimateProperties
+# 
+	- create demo page
+	- manual testing on ie/firefox/safari/chrome
+	- add tests (jasmine)
 
 ## Changelog
 
