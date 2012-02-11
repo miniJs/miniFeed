@@ -14,8 +14,9 @@ class Tweet
 
   constructor: (@tweet, @options) ->
 
+  avatar_url: -> @tweet.user.profile_image_url
+
   formatText: ->
-    console.log @tweet
     tweet = @tweet.text
     tweet = tweet.replace(Tweet.urlRegex(),"<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
     tweet = tweet.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
@@ -28,34 +29,43 @@ class Tweet
     tweet += "<span class='outro-text'>#{@options.outroText}</span>" unless @options.outroText is null
     tweet
     
-
   cssClass: (index, size) ->
     return @options.firstClass if index is 0
     return @options.lastClass  if index is (size - 1)
 
-  # Class methods
-  @apiUrl: (username, limit, showRetweets) ->
+  # class methods
+  @apiUrl: (options) ->
     apiUrl =  "http://api.twitter.com/1/statuses/user_timeline.json?"
-    apiUrl += "screen_name=#{username}"
-    apiUrl += "&count=#{limit}"
-    apiUrl += "&include_rts=1" if showRetweets
+    apiUrl += "screen_name=#{options.username}"
+    apiUrl += "&count=#{options.limit}"
+    apiUrl += "&include_rts=1" if options.showRetweets
     apiUrl += "&callback=?"
     apiUrl
 
-  @avatar: (tweets, options) ->
-    return "<img src='#{tweets[0].tweet.user.profile_image_url}' title='#{options.username}' height='#{options.avatarSize}' width='#{options.avatarSize}'/>" unless tweets.length is 0
-    ""
+class TweetCollection
+  constructor: (apiData, @options) ->
+    @tweets = []
+    @tweets.push(new Tweet(tweet, @options)) for tweet in apiData
 
-  @formattedTweets: (tweets, options) ->
-    $wrapper = $("<div />", { "class": options.className })
-    $wrapper.append(Tweet.avatar(tweets, options)) if options.showAvatar
+  size: -> @tweets.length
 
-    $ul         = $("<ul />", { "class": options.className })
-    size        = tweets.length
-    for tweet, index in tweets
-      $("<li />", {"html" : tweet.format(), "class" : tweet.cssClass(index, size)}).appendTo($ul) 
-    $ul.appendTo($wrapper)
+  firstTweet: -> @tweets[0]
 
+  avatar: ->
+    avatarImage = null
+    avatarImage = $('<img />', { 'src': @firstTweet().avatar_url(), 'title': @options.username, 'height': @options.avatarSize, 'width': @options.avatarSize}) unless @size is 0
+    avatarImage
+  
+  list: ->
+    $ul = $("<ul />", { "class": @options.className })
+    for tweet, index in @tweets
+      $("<li />", {"html" : tweet.format(), "class" : tweet.cssClass(index, @size)}).appendTo($ul) 
+    $ul
+
+  formattedTweets: ->
+    $wrapper = $("<div />", { "class": @options.className })
+    $wrapper.append(@avatar()) if @options.showAvatar
+    $wrapper.append(@list())
     $wrapper
 
 $ ->
@@ -93,9 +103,6 @@ $ ->
     # current state
     state = ''
 
-    # an array of Tweet
-    tweets = []
-
     # show animate properties
     showAnimateProperties = { opacity : 1 }
 
@@ -110,24 +117,20 @@ $ ->
     # set current state
     setState = (_state) -> state = _state      
 
-    tweetFactory = (data) => tweets.push new Tweet(tweet, @settings) for tweet in data
-
     showTweets = => 
       setState 'loading'
 
       # fetch the tweets
-      $.getJSON(Tweet.apiUrl(@getSetting('username'), @getSetting('limit'), @getSetting('showRetweets')), (data) =>
+      $.getJSON(Tweet.apiUrl(@settings), (data) =>
         setState 'formatting'
-        tweetFactory(data)
-        $(element).append(Tweet.formattedTweets(tweets, @settings))
+        tweetCollection = new TweetCollection(data, @settings)
+        $(element).append tweetCollection.formattedTweets()
         setState 'loaded'
       )
 
     ## public methods
     #get current state
     @getState = -> state
-
-    @getTweets = -> tweets
 
     # get particular plugin setting
     @getSetting = (settingKey) -> @settings[settingKey]
