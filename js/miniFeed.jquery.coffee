@@ -15,11 +15,18 @@ class Tweet
   constructor: (@tweet, @options) ->
 
   text: ->
-    text = ""
+    text = ''
     text = "<span class='intro-text'>#{@options.introText}</span>" unless @options.introText is null
     text += @originalText() 
     text += "<span class='outro-text'>#{@options.outroText}</span>" unless @options.outroText is null
-    text
+    $('<span />', { 'class': @options.tweetClass }).append text
+    
+  avatar: ->
+    $('<img />', { 'src': @avatarUrl(), 'class': @options.avatarClass, 'title': @options.username, 'height': @options.avatarSize, 'width': @options.avatarSize })
+
+  time: ->
+    time = new Time(@tweet.created_at, @options.timeFormat)
+    $('<span />', { 'class': @options.timeClass, 'html': time.formatted() })
 
   originalText: ->
     originalText = @tweet.text
@@ -27,14 +34,9 @@ class Tweet
     originalText = originalText.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
     originalText.replace(Tweet.hashRegex(), " <a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a> ")
     
-  cssClass: (index, size) ->
+  listItemClass: (index, size) ->
     return @options.firstClass if index is 0
     return @options.lastClass  if index is (size - 1)
-
-  avatar: ->
-    avatar = null
-    avatar = $('<img />', { 'src': @avatarUrl(), 'title': @options.username, 'height': @options.avatarSize, 'width': @options.avatarSize})
-    avatar
 
   avatarUrl: -> @tweet.user.profile_image_url
 
@@ -57,17 +59,23 @@ class TweetCollection
   list: ->
     $ul = $('<ul />', { 'class': @options.className })
     for tweet, index in @tweets
-      console.log tweet
-      $li = $('<li />', { 'class' : tweet.cssClass(index, @size) })
+      $li = $('<li />', { 'class' : tweet.listItemClass(index, @size) })
       $li.append tweet.avatar()
       $li.append tweet.text()
+      $li.append tweet.time()
       $li.appendTo $ul 
     $ul
 
   formattedTweets: ->
-    $wrapper = $('<div />', { 'class': @options.className })
+    $wrapper = $('<div />', { 'class': @options.listClassName })
     $wrapper.append(@list())
     $wrapper
+
+class Time
+  constructor: (@time, @format) ->
+
+  formatted: ->
+    @time
 
 $ ->
   $.miniFeed = (element, options) ->
@@ -80,17 +88,18 @@ $ ->
       introText:            null                             # text to prepend every tweet
       outroText:            null                             # text to append every tweet
 
-      className:            'tweet-list'                     # class added to the wrapper
+      listClass:            'tweet-list'                     # class added to the list
       firstClass:           'first'                          # class added to the first tweet
       lastClass:            'last'                           # class added to the last tweet
 
       avatarSize:           '48'                             # avatar size in pixels
+      avatarClass:          'tweet-avatar'                   # avatar class name
 
+      tweetClass:          'tweet-text'                     # class added the text wrapper
       showRetweets:         true                             # show account retweets
 
       timeFormat:           'normal'                         # time format 'normal' | 'elapsed'
-      timeClass:            null                             # class added to the time wrapper
-      dateClass:            null                             # class added to the date wrapper
+      timeClass:            'tweet-time'                     # class added to the time wrapper
 
       onLoad:               ->                               # Function() called when the tweets are loading,
       onVisible:            ->                               # Function(feed) called when miniTweet is hidden
@@ -123,7 +132,7 @@ $ ->
       $.getJSON(Tweet.apiUrl(@settings), (data) =>
         setState 'formatting'
         tweetCollection = new TweetCollection(data, @settings)
-        $(element).append tweetCollection.formattedTweets()
+        @$element.append tweetCollection.formattedTweets()
         setState 'loaded'
       )
 

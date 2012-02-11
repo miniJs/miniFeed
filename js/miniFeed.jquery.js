@@ -1,5 +1,5 @@
 (function() {
-  var Tweet, TweetCollection;
+  var Time, Tweet, TweetCollection;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   Tweet = (function() {
     Tweet.urlRegex = function() {
@@ -17,7 +17,7 @@
     }
     Tweet.prototype.text = function() {
       var text;
-      text = "";
+      text = '';
       if (this.options.introText !== null) {
         text = "<span class='intro-text'>" + this.options.introText + "</span>";
       }
@@ -25,7 +25,26 @@
       if (this.options.outroText !== null) {
         text += "<span class='outro-text'>" + this.options.outroText + "</span>";
       }
-      return text;
+      return $('<span />', {
+        'class': this.options.tweetClass
+      }).append(text);
+    };
+    Tweet.prototype.avatar = function() {
+      return $('<img />', {
+        'src': this.avatarUrl(),
+        'class': this.options.avatarClass,
+        'title': this.options.username,
+        'height': this.options.avatarSize,
+        'width': this.options.avatarSize
+      });
+    };
+    Tweet.prototype.time = function() {
+      var time;
+      time = new Time(this.tweet.created_at, this.options.timeFormat);
+      return $('<span />', {
+        'class': this.options.timeClass,
+        'html': time.formatted()
+      });
     };
     Tweet.prototype.originalText = function() {
       var originalText;
@@ -34,24 +53,13 @@
       originalText = originalText.replace(Tweet.userRegex(), "<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
       return originalText.replace(Tweet.hashRegex(), " <a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a> ");
     };
-    Tweet.prototype.cssClass = function(index, size) {
+    Tweet.prototype.listItemClass = function(index, size) {
       if (index === 0) {
         return this.options.firstClass;
       }
       if (index === (size - 1)) {
         return this.options.lastClass;
       }
-    };
-    Tweet.prototype.avatar = function() {
-      var avatar;
-      avatar = null;
-      avatar = $('<img />', {
-        'src': this.avatarUrl(),
-        'title': this.options.username,
-        'height': this.options.avatarSize,
-        'width': this.options.avatarSize
-      });
-      return avatar;
     };
     Tweet.prototype.avatarUrl = function() {
       return this.tweet.user.profile_image_url;
@@ -90,12 +98,12 @@
       _ref = this.tweets;
       for (index = 0, _len = _ref.length; index < _len; index++) {
         tweet = _ref[index];
-        console.log(tweet);
         $li = $('<li />', {
-          'class': tweet.cssClass(index, this.size)
+          'class': tweet.listItemClass(index, this.size)
         });
         $li.append(tweet.avatar());
         $li.append(tweet.text());
+        $li.append(tweet.time());
         $li.appendTo($ul);
       }
       return $ul;
@@ -103,12 +111,22 @@
     TweetCollection.prototype.formattedTweets = function() {
       var $wrapper;
       $wrapper = $('<div />', {
-        'class': this.options.className
+        'class': this.options.listClassName
       });
       $wrapper.append(this.list());
       return $wrapper;
     };
     return TweetCollection;
+  })();
+  Time = (function() {
+    function Time(time, format) {
+      this.time = time;
+      this.format = format;
+    }
+    Time.prototype.formatted = function() {
+      return this.time;
+    };
+    return Time;
   })();
   $(function() {
     $.miniFeed = function(element, options) {
@@ -119,14 +137,15 @@
         template: '{avatar}{tweet}{date}{time}',
         introText: null,
         outroText: null,
-        className: 'tweet-list',
+        listClass: 'tweet-list',
         firstClass: 'first',
         lastClass: 'last',
         avatarSize: '48',
+        avatarClass: 'tweet-avatar',
+        tweetClass: 'tweet-text',
         showRetweets: true,
         timeFormat: 'normal',
-        timeClass: null,
-        dateClass: null,
+        timeClass: 'tweet-time',
         onLoad: function() {},
         onVisible: function() {},
         showAnimateProperties: {}
@@ -146,7 +165,7 @@
           var tweetCollection;
           setState('formatting');
           tweetCollection = new TweetCollection(data, this.settings);
-          $(element).append(tweetCollection.formattedTweets());
+          this.$element.append(tweetCollection.formattedTweets());
           return setState('loaded');
         }, this));
       }, this);
