@@ -84,14 +84,14 @@
     };
     TweetCollection.prototype.list = function() {
       var $li, $ul, index, tweet, _len, _ref;
-      $ul = $("<ul />", {
-        "class": this.options.className
+      $ul = $('<ul />', {
+        'class': this.options.className
       });
       _ref = this.tweets;
       for (index = 0, _len = _ref.length; index < _len; index++) {
         tweet = _ref[index];
-        $li = $("<li />", {
-          "class": tweet.cssClass(index, this.size)
+        $li = $('<li />', {
+          'class': tweet.cssClass(index, this.size)
         });
         $li.append(tweet.avatar());
         $li.append(tweet.text());
@@ -101,8 +101,8 @@
     };
     TweetCollection.prototype.formattedTweets = function() {
       var $wrapper;
-      $wrapper = $("<div />", {
-        "class": this.options.className
+      $wrapper = $('<div />', {
+        'class': this.options.className
       });
       $wrapper.append(this.list());
       return $wrapper;

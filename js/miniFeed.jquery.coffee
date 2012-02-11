@@ -55,16 +55,16 @@ class TweetCollection
   size: -> @tweets.length
   
   list: ->
-    $ul = $("<ul />", { "class": @options.className })
+    $ul = $('<ul />', { 'class': @options.className })
     for tweet, index in @tweets
-      $li = $("<li />", { "class" : tweet.cssClass(index, @size)})
+      $li = $('<li />', { 'class' : tweet.cssClass(index, @size) })
       $li.append tweet.avatar()
       $li.append tweet.text()
-      $li.appendTo($ul) 
+      $li.appendTo $ul 
     $ul
 
   formattedTweets: ->
-    $wrapper = $("<div />", { "class": @options.className })
+    $wrapper = $('<div />', { 'class': @options.className })
     $wrapper.append(@list())
     $wrapper
 
