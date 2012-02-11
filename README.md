@@ -38,6 +38,24 @@ coming soon
 * Chrome
 * Safari and Mobile Safari.
 
+### TODO
+- add first class
+- add last class
+- add intro text
+- add outro text
+- handle the template
+- add limit
+- add class name
+- adapt the avatar size
+- manage time format
+- add time class
+- call onLoad
+- call onVisible
+- call showAnimateProperties
+- create demo page
+- manual testing on ie/firefox/safari/chrome
+- add tests (jasmine)
+
 ## Changelog
 
 * Initial Release
