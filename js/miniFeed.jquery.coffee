@@ -25,6 +25,7 @@ class Tweet
     tweet += @options.introText unless @options.introText is null
     tweet += @formatText()
     tweet += @options.outroText unless @options.outroText is null
+    tweet
     
 
   cssClass: (index, size) ->
@@ -40,9 +41,9 @@ class Tweet
     apiUrl += "&callback=?"
     apiUrl
 
-  @formattedTweets: (tweets) ->
-    $ul = $("<ul />")
-    size = tweets.length
+  @formattedTweets: (tweets, options) ->
+    $ul         = $("<ul />", { "class": options.className })
+    size        = tweets.length
     for tweet, index in tweets
       $("<li />", {"html" : tweet.format(), "class" : tweet.cssClass(index, size)}).appendTo($ul) 
     $ul   
@@ -58,7 +59,7 @@ $ ->
       introText:            null                             # text to prepend every tweet
       outroText:            null                             # text to append every tweet
 
-      className:            'mini-feed'                      # class added to the <ul/> generated element
+      className:            'tweet-list'                     # class added to the <ul/> generated element
       firstClass:           'first'                          # class added to the first tweet
       lastClass:            'last'                           # class added to the last tweet
 
@@ -104,10 +105,10 @@ $ ->
       setState 'loading'
 
       # fetch the tweets
-      $.getJSON(Tweet.apiUrl(@getSetting('username'), @getSetting('limit'), @getSetting('showRetweets')), (data) ->
+      $.getJSON(Tweet.apiUrl(@getSetting('username'), @getSetting('limit'), @getSetting('showRetweets')), (data) =>
         setState 'formatting'
         tweetFactory(data)
-        $(element).append(Tweet.formattedTweets(tweets))
+        $(element).append(Tweet.formattedTweets(tweets, @settings))
         setState 'loaded'
       )
 

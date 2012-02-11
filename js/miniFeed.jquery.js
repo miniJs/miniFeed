@@ -30,8 +30,9 @@
       }
       tweet += this.formatText();
       if (this.options.outroText !== null) {
-        return tweet += this.options.outroText;
+        tweet += this.options.outroText;
       }
+      return tweet;
     };
     Tweet.prototype.cssClass = function(index, size) {
       if (index === 0) {
@@ -52,9 +53,11 @@
       apiUrl += "&callback=?";
       return apiUrl;
     };
-    Tweet.formattedTweets = function(tweets) {
+    Tweet.formattedTweets = function(tweets, options) {
       var $ul, index, size, tweet, _len;
-      $ul = $("<ul />");
+      $ul = $("<ul />", {
+        "class": options.className
+      });
       size = tweets.length;
       for (index = 0, _len = tweets.length; index < _len; index++) {
         tweet = tweets[index];
@@ -76,7 +79,7 @@
         template: '{avatar}{tweet}{date}{time}',
         introText: null,
         outroText: null,
-        className: 'mini-feed',
+        className: 'tweet-list',
         firstClass: 'first',
         lastClass: 'last',
         avatarSize: '48px',
@@ -110,12 +113,12 @@
       }, this);
       showTweets = __bind(function() {
         setState('loading');
-        return $.getJSON(Tweet.apiUrl(this.getSetting('username'), this.getSetting('limit'), this.getSetting('showRetweets')), function(data) {
+        return $.getJSON(Tweet.apiUrl(this.getSetting('username'), this.getSetting('limit'), this.getSetting('showRetweets')), __bind(function(data) {
           setState('formatting');
           tweetFactory(data);
-          $(element).append(Tweet.formattedTweets(tweets));
+          $(element).append(Tweet.formattedTweets(tweets, this.settings));
           return setState('loaded');
-        });
+        }, this));
       }, this);
       this.getState = function() {
         return state;

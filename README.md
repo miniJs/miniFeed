@@ -37,12 +37,9 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
-- add first class
-- add last class
 - add intro text
 - add outro text
 - handle the template
-- add class name
 - adapt the avatar size
 - manage time format
 - add time class
