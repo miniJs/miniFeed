@@ -7,13 +7,13 @@ The Twitter jQuery Plugin you've always been looking for.
 
 miniFeed is very basic but powerful twitter jQuery plugin that allows you to show a twitter feed from any Twitter accounts
 
-If you have any question of find a bug, please raise it <a href="https://github.com/MatthieuA/miniFeed/issues">at GitHub</a> or <a href="http://www.twitter.com/matthieu_tweets">on Twitter</a>.
+If you have any question of find a bug, please raise it <a href="https://github.com/MatthieuA/miniFeed/issues">at GitHub</a> or <a href="http://www.twitter.com/mattaussaguel">on Twitter</a>.
 
 ### Info
 
 Developed by "Matthieu Aussaguel":mailto:matthieu.aussaguel@gmail.com, "mynameismatthieu.com":http://mynameismatthieu.com
 
-For updates, follow Matthieu on "Twitter":http://twitter.com/matthieu_tweets
+For updates, follow Matthieu on "Twitter":http://twitter.com/mattaussaguel
 
 ## Examples and Instructions
 
