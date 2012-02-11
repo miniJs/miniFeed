@@ -15,27 +15,24 @@
       this.tweet = tweet;
       this.options = options;
     }
-    Tweet.prototype.avatar_url = function() {
-      return this.tweet.user.profile_image_url;
-    };
-    Tweet.prototype.formatText = function() {
-      var tweet;
-      tweet = this.tweet.text;
-      tweet = tweet.replace(Tweet.urlRegex(), "<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
-      tweet = tweet.replace(Tweet.userRegex(), "<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
-      return tweet.replace(Tweet.hashRegex(), "<a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a>");
-    };
-    Tweet.prototype.format = function() {
-      var tweet;
-      tweet = '';
+    Tweet.prototype.text = function() {
+      var text;
+      text = "";
       if (this.options.introText !== null) {
-        tweet += "<span class='intro-text'>" + this.options.introText + "</span>";
+        text = "<span class='intro-text'>" + this.options.introText + "</span>";
       }
-      tweet += this.formatText();
+      text += this.originalText();
       if (this.options.outroText !== null) {
-        tweet += "<span class='outro-text'>" + this.options.outroText + "</span>";
+        text += "<span class='outro-text'>" + this.options.outroText + "</span>";
       }
-      return tweet;
+      return text;
+    };
+    Tweet.prototype.originalText = function() {
+      var originalText;
+      originalText = this.tweet.text;
+      originalText = originalText.replace(Tweet.urlRegex(), "<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
+      originalText = originalText.replace(Tweet.userRegex(), "<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
+      return originalText.replace(Tweet.hashRegex(), " <a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a> ");
     };
     Tweet.prototype.cssClass = function(index, size) {
       if (index === 0) {
@@ -44,6 +41,20 @@
       if (index === (size - 1)) {
         return this.options.lastClass;
       }
+    };
+    Tweet.prototype.avatar = function() {
+      var avatar;
+      avatar = null;
+      avatar = $('<img />', {
+        'src': this.avatarUrl(),
+        'title': this.options.username,
+        'height': this.options.avatarSize,
+        'width': this.options.avatarSize
+      });
+      return avatar;
+    };
+    Tweet.prototype.avatarUrl = function() {
+      return this.tweet.user.profile_image_url;
     };
     Tweet.apiUrl = function(options) {
       var apiUrl;
@@ -71,34 +82,20 @@
     TweetCollection.prototype.size = function() {
       return this.tweets.length;
     };
-    TweetCollection.prototype.firstTweet = function() {
-      return this.tweets[0];
-    };
-    TweetCollection.prototype.avatar = function() {
-      var avatarImage;
-      avatarImage = null;
-      if (this.size !== 0) {
-        avatarImage = $('<img />', {
-          'src': this.firstTweet().avatar_url(),
-          'title': this.options.username,
-          'height': this.options.avatarSize,
-          'width': this.options.avatarSize
-        });
-      }
-      return avatarImage;
-    };
     TweetCollection.prototype.list = function() {
-      var $ul, index, tweet, _len, _ref;
+      var $li, $ul, index, tweet, _len, _ref;
       $ul = $("<ul />", {
         "class": this.options.className
       });
       _ref = this.tweets;
       for (index = 0, _len = _ref.length; index < _len; index++) {
         tweet = _ref[index];
-        $("<li />", {
-          "html": tweet.format(),
+        $li = $("<li />", {
           "class": tweet.cssClass(index, this.size)
-        }).appendTo($ul);
+        });
+        $li.append(tweet.avatar());
+        $li.append(tweet.text());
+        $li.appendTo($ul);
       }
       return $ul;
     };
@@ -107,9 +104,6 @@
       $wrapper = $("<div />", {
         "class": this.options.className
       });
-      if (this.options.showAvatar) {
-        $wrapper.append(this.avatar());
-      }
       $wrapper.append(this.list());
       return $wrapper;
     };
@@ -127,7 +121,6 @@
         className: 'tweet-list',
         firstClass: 'first',
         lastClass: 'last',
-        showAvatar: false,
         avatarSize: '48',
         showRetweets: true,
         showTime: true,

@@ -14,24 +14,29 @@ class Tweet
 
   constructor: (@tweet, @options) ->
 
-  avatar_url: -> @tweet.user.profile_image_url
+  text: ->
+    text = ""
+    text = "<span class='intro-text'>#{@options.introText}</span>" unless @options.introText is null
+    text += @originalText() 
+    text += "<span class='outro-text'>#{@options.outroText}</span>" unless @options.outroText is null
+    text
 
-  formatText: ->
-    tweet = @tweet.text
-    tweet = tweet.replace(Tweet.urlRegex(),"<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
-    tweet = tweet.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
-    tweet.replace(Tweet.hashRegex(), "<a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a>")
-
-  format: ->
-    tweet =  ''
-    tweet += "<span class='intro-text'>#{@options.introText}</span>" unless @options.introText is null
-    tweet += @formatText()
-    tweet += "<span class='outro-text'>#{@options.outroText}</span>" unless @options.outroText is null
-    tweet
+  originalText: ->
+    originalText = @tweet.text
+    originalText = originalText.replace(Tweet.urlRegex(),"<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
+    originalText = originalText.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
+    originalText.replace(Tweet.hashRegex(), " <a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a> ")
     
   cssClass: (index, size) ->
     return @options.firstClass if index is 0
     return @options.lastClass  if index is (size - 1)
+
+  avatar: ->
+    avatar = null
+    avatar = $('<img />', { 'src': @avatarUrl(), 'title': @options.username, 'height': @options.avatarSize, 'width': @options.avatarSize})
+    avatar
+
+  avatarUrl: -> @tweet.user.profile_image_url
 
   # class methods
   @apiUrl: (options) ->
@@ -48,23 +53,18 @@ class TweetCollection
     @tweets.push(new Tweet(tweet, @options)) for tweet in apiData
 
   size: -> @tweets.length
-
-  firstTweet: -> @tweets[0]
-
-  avatar: ->
-    avatarImage = null
-    avatarImage = $('<img />', { 'src': @firstTweet().avatar_url(), 'title': @options.username, 'height': @options.avatarSize, 'width': @options.avatarSize}) unless @size is 0
-    avatarImage
   
   list: ->
     $ul = $("<ul />", { "class": @options.className })
     for tweet, index in @tweets
-      $("<li />", {"html" : tweet.format(), "class" : tweet.cssClass(index, @size)}).appendTo($ul) 
+      $li = $("<li />", { "class" : tweet.cssClass(index, @size)})
+      $li.append tweet.avatar()
+      $li.append tweet.text()
+      $li.appendTo($ul) 
     $ul
 
   formattedTweets: ->
     $wrapper = $("<div />", { "class": @options.className })
-    $wrapper.append(@avatar()) if @options.showAvatar
     $wrapper.append(@list())
     $wrapper
 
@@ -83,7 +83,6 @@ $ ->
       firstClass:           'first'                          # class added to the first tweet
       lastClass:            'last'                           # class added to the last tweet
 
-      showAvatar:           false                            # show avatar
       avatarSize:           '48'                             # avatar size in pixels
 
       showRetweets:         true                             # show account retweets
