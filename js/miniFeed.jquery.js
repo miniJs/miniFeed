@@ -17,6 +17,7 @@
     }
     Tweet.prototype.formatText = function() {
       var tweet;
+      console.log(this.tweet);
       tweet = this.tweet.text;
       tweet = tweet.replace(Tweet.urlRegex(), "<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
       tweet = tweet.replace(Tweet.userRegex(), "<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
@@ -53,8 +54,20 @@
       apiUrl += "&callback=?";
       return apiUrl;
     };
+    Tweet.avatar = function(tweets, options) {
+      if (tweets.length !== 0) {
+        return "<img src='" + tweets[0].tweet.user.profile_image_url + "' title='" + options.username + "' height='" + options.avatarSize + "' width='" + options.avatarSize + "'/>";
+      }
+      return "";
+    };
     Tweet.formattedTweets = function(tweets, options) {
-      var $ul, index, size, tweet, _len;
+      var $ul, $wrapper, index, size, tweet, _len;
+      $wrapper = $("<div />", {
+        "class": options.className
+      });
+      if (options.showAvatar) {
+        $wrapper.append(Tweet.avatar(tweets, options));
+      }
       $ul = $("<ul />", {
         "class": options.className
       });
@@ -66,7 +79,8 @@
           "class": tweet.cssClass(index, size)
         }).appendTo($ul);
       }
-      return $ul;
+      $ul.appendTo($wrapper);
+      return $wrapper;
     };
     return Tweet;
   })();
@@ -75,14 +89,15 @@
       var setState, showAnimateProperties, showTweets, state, tweetFactory, tweets;
       this.defaults = {
         username: 'mattaussaguel',
-        limit: 6,
+        limit: 4,
         template: '{avatar}{tweet}{date}{time}',
         introText: null,
         outroText: null,
         className: 'tweet-list',
         firstClass: 'first',
         lastClass: 'last',
-        avatarSize: '48px',
+        showAvatar: false,
+        avatarSize: '48',
         showRetweets: true,
         showTime: true,
         timeFormat: 'normal',

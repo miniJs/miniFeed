@@ -37,7 +37,6 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
-- adapt the avatar size
 - manage time format
 - add time class
 - handle the template

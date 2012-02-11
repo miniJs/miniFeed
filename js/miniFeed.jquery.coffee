@@ -15,6 +15,7 @@ class Tweet
   constructor: (@tweet, @options) ->
 
   formatText: ->
+    console.log @tweet
     tweet = @tweet.text
     tweet = tweet.replace(Tweet.urlRegex(),"<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
     tweet = tweet.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
@@ -41,29 +42,39 @@ class Tweet
     apiUrl += "&callback=?"
     apiUrl
 
+  @avatar: (tweets, options) ->
+    return "<img src='#{tweets[0].tweet.user.profile_image_url}' title='#{options.username}' height='#{options.avatarSize}' width='#{options.avatarSize}'/>" unless tweets.length is 0
+    ""
+
   @formattedTweets: (tweets, options) ->
+    $wrapper = $("<div />", { "class": options.className })
+    $wrapper.append(Tweet.avatar(tweets, options)) if options.showAvatar
+
     $ul         = $("<ul />", { "class": options.className })
     size        = tweets.length
     for tweet, index in tweets
       $("<li />", {"html" : tweet.format(), "class" : tweet.cssClass(index, size)}).appendTo($ul) 
-    $ul   
+    $ul.appendTo($wrapper)
+
+    $wrapper
 
 $ ->
   $.miniFeed = (element, options) ->
     # default plugin settings
     @defaults = {
       username:             'mattaussaguel'                  # twitter username
-      limit:                6                                # number of tweets to be displayed
+      limit:                4                                # number of tweets to be displayed
 
       template:             '{avatar}{tweet}{date}{time}'    # tweet format
       introText:            null                             # text to prepend every tweet
       outroText:            null                             # text to append every tweet
 
-      className:            'tweet-list'                     # class added to the <ul/> generated element
+      className:            'tweet-list'                     # class added to the wrapper
       firstClass:           'first'                          # class added to the first tweet
       lastClass:            'last'                           # class added to the last tweet
 
-      avatarSize:           '48px'                           # avatar size in pixels
+      showAvatar:           false                            # show avatar
+      avatarSize:           '48'                             # avatar size in pixels
 
       showRetweets:         true                             # show account retweets
 
