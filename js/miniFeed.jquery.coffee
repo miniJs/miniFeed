@@ -165,7 +165,9 @@ $ ->
       $.getJSON(Tweet.apiUrl(@settings), (data) =>
         setState 'formatting'
         tweetCollection = new TweetCollection(data, @settings)
-        @$element.append tweetCollection.formattedTweets()
+        @$element.append(tweetCollection
+                 .formattedTweets())
+                 .animate(@settings.showAnimateProperties)
         setState 'loaded'
       )
 
