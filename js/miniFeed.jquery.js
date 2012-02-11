@@ -1,5 +1,5 @@
 (function() {
-  var Tweet;
+  var Tweet, TweetCollection;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   Tweet = (function() {
     Tweet.urlRegex = function() {
@@ -15,9 +15,11 @@
       this.tweet = tweet;
       this.options = options;
     }
+    Tweet.prototype.avatar_url = function() {
+      return this.tweet.user.profile_image_url;
+    };
     Tweet.prototype.formatText = function() {
       var tweet;
-      console.log(this.tweet);
       tweet = this.tweet.text;
       tweet = tweet.replace(Tweet.urlRegex(), "<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
       tweet = tweet.replace(Tweet.userRegex(), "<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
@@ -43,50 +45,79 @@
         return this.options.lastClass;
       }
     };
-    Tweet.apiUrl = function(username, limit, showRetweets) {
+    Tweet.apiUrl = function(options) {
       var apiUrl;
       apiUrl = "http://api.twitter.com/1/statuses/user_timeline.json?";
-      apiUrl += "screen_name=" + username;
-      apiUrl += "&count=" + limit;
-      if (showRetweets) {
+      apiUrl += "screen_name=" + options.username;
+      apiUrl += "&count=" + options.limit;
+      if (options.showRetweets) {
         apiUrl += "&include_rts=1";
       }
       apiUrl += "&callback=?";
       return apiUrl;
     };
-    Tweet.avatar = function(tweets, options) {
-      if (tweets.length !== 0) {
-        return "<img src='" + tweets[0].tweet.user.profile_image_url + "' title='" + options.username + "' height='" + options.avatarSize + "' width='" + options.avatarSize + "'/>";
+    return Tweet;
+  })();
+  TweetCollection = (function() {
+    function TweetCollection(apiData, options) {
+      var tweet, _i, _len;
+      this.options = options;
+      this.tweets = [];
+      for (_i = 0, _len = apiData.length; _i < _len; _i++) {
+        tweet = apiData[_i];
+        this.tweets.push(new Tweet(tweet, this.options));
       }
-      return "";
+    }
+    TweetCollection.prototype.size = function() {
+      return this.tweets.length;
     };
-    Tweet.formattedTweets = function(tweets, options) {
-      var $ul, $wrapper, index, size, tweet, _len;
-      $wrapper = $("<div />", {
-        "class": options.className
-      });
-      if (options.showAvatar) {
-        $wrapper.append(Tweet.avatar(tweets, options));
+    TweetCollection.prototype.firstTweet = function() {
+      return this.tweets[0];
+    };
+    TweetCollection.prototype.avatar = function() {
+      var avatarImage;
+      avatarImage = null;
+      if (this.size !== 0) {
+        avatarImage = $('<img />', {
+          'src': this.firstTweet().avatar_url(),
+          'title': this.options.username,
+          'height': this.options.avatarSize,
+          'width': this.options.avatarSize
+        });
       }
+      return avatarImage;
+    };
+    TweetCollection.prototype.list = function() {
+      var $ul, index, tweet, _len, _ref;
       $ul = $("<ul />", {
-        "class": options.className
+        "class": this.options.className
       });
-      size = tweets.length;
-      for (index = 0, _len = tweets.length; index < _len; index++) {
-        tweet = tweets[index];
+      _ref = this.tweets;
+      for (index = 0, _len = _ref.length; index < _len; index++) {
+        tweet = _ref[index];
         $("<li />", {
           "html": tweet.format(),
-          "class": tweet.cssClass(index, size)
+          "class": tweet.cssClass(index, this.size)
         }).appendTo($ul);
       }
-      $ul.appendTo($wrapper);
+      return $ul;
+    };
+    TweetCollection.prototype.formattedTweets = function() {
+      var $wrapper;
+      $wrapper = $("<div />", {
+        "class": this.options.className
+      });
+      if (this.options.showAvatar) {
+        $wrapper.append(this.avatar());
+      }
+      $wrapper.append(this.list());
       return $wrapper;
     };
-    return Tweet;
+    return TweetCollection;
   })();
   $(function() {
     $.miniFeed = function(element, options) {
-      var setState, showAnimateProperties, showTweets, state, tweetFactory, tweets;
+      var setState, showAnimateProperties, showTweets, state;
       this.defaults = {
         username: 'mattaussaguel',
         limit: 4,
@@ -108,7 +139,6 @@
         showAnimateProperties: {}
       };
       state = '';
-      tweets = [];
       showAnimateProperties = {
         opacity: 1
       };
@@ -117,29 +147,18 @@
       setState = function(_state) {
         return state = _state;
       };
-      tweetFactory = __bind(function(data) {
-        var tweet, _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = data.length; _i < _len; _i++) {
-          tweet = data[_i];
-          _results.push(tweets.push(new Tweet(tweet, this.settings)));
-        }
-        return _results;
-      }, this);
       showTweets = __bind(function() {
         setState('loading');
-        return $.getJSON(Tweet.apiUrl(this.getSetting('username'), this.getSetting('limit'), this.getSetting('showRetweets')), __bind(function(data) {
+        return $.getJSON(Tweet.apiUrl(this.settings), __bind(function(data) {
+          var tweetCollection;
           setState('formatting');
-          tweetFactory(data);
-          $(element).append(Tweet.formattedTweets(tweets, this.settings));
+          tweetCollection = new TweetCollection(data, this.settings);
+          $(element).append(tweetCollection.formattedTweets());
           return setState('loaded');
         }, this));
       }, this);
       this.getState = function() {
         return state;
-      };
-      this.getTweets = function() {
-        return tweets;
       };
       this.getSetting = function(settingKey) {
         return this.settings[settingKey];
