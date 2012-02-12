@@ -2,7 +2,7 @@
 # miniFeed, the Twitter plugin for jQuery
 # Instructions: Coming Soon
 # By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @mattaussaguel
-# Version: 0.1
+# Version: 0.2
 # Updated: February 11, 2012
 #
 
