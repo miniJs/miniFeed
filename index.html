@@ -16,18 +16,47 @@
           <h1><strong>miniFeed demo</strong> - jQuery Plugin</h1>
       </header>
 
-      <div id="mini-feed">
+      <div id="main" class="clearfix">
+        <section id="example-1">
+          <h2>Default</h2>
+          <div class="mini-feed"></div>
+        </section>
+        <section id="example-2">
+          <h2>Template</h2>
+          <h3>Matthieu Aussaguel <a href="http://twitter.com/mattaussaguel" target="_blank">@mattaussaguel</a></h3>
+          <div class="mini-feed"></div>
+        </section>
+        <section id="example-3">
+          <h2>Events / Animation</h2>
+          <a href="#" class="show">Click Here</a>
+          <div class="mini-feed">
+            
+          </div>
+        </section>
       </div>
-
-      <footer>
-      </footer>
     </div>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
     <script src="js/miniFeed.jquery.js"></script>
     <script>
       $(function() {
-          $('#mini-feed').miniFeed();
+          $('#example-1 .mini-feed').miniFeed();
+          
+          $('#example-2 .mini-feed').miniFeed({template: '{time}{tweet}', limit: 8, timeFormat: 'normal'});
+
+          $('#example-3 .show').click(function() {
+            var link = $(this)
+            $('#example-3 .mini-feed').miniFeed({
+              'onLoad': function() {
+                link.text('Loading...')
+              },
+              'onLoaded': function(feed) {
+                link.hide();
+                feed.css(opcacity,0).show().animate({opacity: 1}, 5000);
+              }
+            });  
+          })
+          
       });
     </script>
   </body>
