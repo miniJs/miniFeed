@@ -37,8 +37,6 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
-	-	don't show replies by defaults
-#
 	- add test coverage
 
 ## Changelog

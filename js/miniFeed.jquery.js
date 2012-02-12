@@ -66,12 +66,15 @@
     Tweet.prototype.avatarUrl = function() {
       return this.data.user.profile_image_url;
     };
+    Tweet.prototype.isReply = function() {
+      return this.data.in_reply_to_status_id != null;
+    };
     Tweet.apiUrl = function(options) {
       var apiUrl;
       apiUrl = "http://api.twitter.com/1/statuses/user_timeline.json?";
       apiUrl += "screen_name=" + options.username;
       apiUrl += "&count=" + options.limit;
-      if (options.showRetweets) {
+      if (!options.hideRetweets) {
         apiUrl += "&include_rts=1";
       }
       apiUrl += "&callback=?";
@@ -100,11 +103,13 @@
       _ref = this.tweets;
       for (index = 0, _len = _ref.length; index < _len; index++) {
         tweet = _ref[index];
-        $li = $('<li />', {
-          'class': tweet.listItemClass(index, this.size())
-        });
-        $li.append(tweet.content());
-        $li.appendTo($ul);
+        if (!(this.options.hideReplies && tweet.isReply())) {
+          $li = $('<li />', {
+            'class': tweet.listItemClass(index, this.size())
+          });
+          $li.append(tweet.content());
+          $li.appendTo($ul);
+        }
       }
       return $ul;
     };
@@ -167,7 +172,8 @@
         avatarSize: '48',
         avatarClass: 'tweet-avatar',
         tweetClass: 'tweet-text',
-        showRetweets: true,
+        hideRetweets: false,
+        hideReplies: false,
         timeFormat: 'relative',
         timeClass: 'tweet-time',
         onLoad: function() {},

@@ -42,12 +42,16 @@
       $(function() {
           $('#example-1 .mini-feed').miniFeed();
           
-          $('#example-2 .mini-feed').miniFeed({template: '{time}{tweet}', limit: 8, timeFormat: 'normal'});
+          $('#example-2 .mini-feed').miniFeed({
+              template: '{time}{tweet}', 
+              limit: 8, 
+              timeFormat: 'normal'
+            });
 
           $('#example-3 .show').click(function() {
             var link = $(this)
             $('#example-3 .mini-feed').miniFeed({
-              'onLoad': function() {
+              'onLoad': function(feed) {
                 link.text('Loading...')
               },
               'onLoaded': function(feed) {

@@ -47,12 +47,14 @@ class Tweet
 
   avatarUrl: -> @data.user.profile_image_url
 
+  isReply: -> @data.in_reply_to_status_id?
+
   # class methods
   @apiUrl: (options) ->
     apiUrl =  "http://api.twitter.com/1/statuses/user_timeline.json?"
     apiUrl += "screen_name=#{options.username}"
     apiUrl += "&count=#{options.limit}"
-    apiUrl += "&include_rts=1" if options.showRetweets
+    apiUrl += "&include_rts=1" unless options.hideRetweets
     apiUrl += "&callback=?"
     apiUrl
 
@@ -66,9 +68,10 @@ class TweetCollection
   formattedTweets: ->
     $ul = $('<ul />', { 'class': @options.listClass })
     for tweet, index in @tweets
-      $li = $('<li />', { 'class' : tweet.listItemClass(index, @size()) })
-      $li.append tweet.content()
-      $li.appendTo $ul 
+      unless @options.hideReplies and tweet.isReply()
+        $li = $('<li />', { 'class' : tweet.listItemClass(index, @size()) })
+        $li.append tweet.content()
+        $li.appendTo $ul 
     $ul
 
 class Time
@@ -124,7 +127,8 @@ $ ->
       avatarClass:          'tweet-avatar'                   # avatar class name
 
       tweetClass:          'tweet-text'                      # class added the text wrapper
-      showRetweets:         true                             # show account retweets
+      hideRetweets:         false                            # hide retweets
+      hideReplies:          false                            # hide tweet replies
 
       timeFormat:           'relative'                       # time format 'normal' | 'elapsed'
       timeClass:            'tweet-time'                     # class added to the time wrapper
