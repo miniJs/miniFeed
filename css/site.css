@@ -4,6 +4,15 @@ body {
     color: #3C3C3C;
 }
 
+a, a:hover, a:active {
+    color: #55C3DC;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
 h1 {
     font-size: 24px;
     line-height: 48px;
@@ -17,9 +26,119 @@ h1 strong {
     font-weight: bold;
 }
 
+h3 {
+    font-weight: 100;
+    font-size: 14px;
+}
+
+h3 a{
+    font-size: 11px;
+    padding-left: 6px;
+}
+
 #container {
     width: 960px;
     font-weight: 100;
     margin:  0 auto;
 }
+
+section {
+    width: 320px;
+    position: relative;
+    float: left;
+}
+
+.mini-feed {
+    background-color: #fff;
+    border-radius: 6px;
+    margin-right: 20px;
+    border: 1px solid #F2F2F2;
+}
+
+.mini-feed ul {
+    margin: 0 10px 0 0;
+    padding: 0;
+}
+
+.mini-feed li {
+    border-bottom: 1px solid #F2F2F2;
+    list-style: none;
+    padding: 10px 20px 10px 10px;
+    font-size: 13px;
+    line-height: 16px;
+    min-height: 48px;
+}
+
+.mini-feed li.last {
+    border: none;
+}
+
+.mini-feed li img {
+    border-radius: 6px;
+    float: left;
+    margin: 0 10px 10px 0;
+}
+
+.mini-feed li span {
+    margin-left: 58px;
+    display: block;
+}
+
+.mini-feed li .tweet-time {
+    display: block;
+    color: #999;
+    font-size: 11px;
+    padding-top: 5px;
+}
+
+
+#example-2 .mini-feed li span {
+    margin: 0;
+}
+
+#example-2 .mini-feed .tweet-time {
+    text-align: right;
+    padding: 0 0 10px 0;
+}
+
+#example-3 .mini-feed {
+    display: none;
+}
+
+#example-3 a.show {
+    display: block;
+    text-align: center;
+    background-color: #F2F2F2;
+    border: 1px solid #CBCBCB;
+    color: #3C3C3C;
+    padding: 8px;
+    margin: 10px 30px;
+    font-size: 14px;
+    border-radius:  6px;
+
+}
+
+#example-3 a.show:hover {
+    text-decoration: none;
+    background-color: #CBCBCB;
+    border: 1px solid #F2F2F2;
+    color: #fff;
+
+}
+
+.clearfix:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+}
+
+.clearfix { display: inline-block; }
+
+/* start commented backslash hack */
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+/* close commented backslash hack */
 

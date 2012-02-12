@@ -37,6 +37,8 @@ coming soon
 * Safari and Mobile Safari.
 
 ### TODO
+	-	don't show replies by defaults
+#
 	- create demo page
 	- manual testing on ie/firefox/safari/chrome
 	- add tests (jasmine)
