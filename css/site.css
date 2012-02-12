@@ -103,6 +103,7 @@ section {
 
 #example-3 .mini-feed {
     display: none;
+    position: relative;
 }
 
 #example-3 a.show {
