@@ -1,6 +1,6 @@
 (function() {
   var Time, Tweet, TweetCollection;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __slice = Array.prototype.slice;
   Tweet = (function() {
     Tweet.urlRegex = function() {
       return /((ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?)/gi;
@@ -52,7 +52,7 @@
       var originalText;
       originalText = this.data.text;
       originalText = originalText.replace(Tweet.urlRegex(), "<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
-      originalText = originalText.replace(Tweet.userRegex(), "<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
+      originalText = originalText.replace(Tweet.userRegex(), "<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\">@$1</a>");
       return originalText.replace(Tweet.hashRegex(), " <a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a> ");
     };
     Tweet.prototype.listItemClass = function(index, size) {
@@ -92,29 +92,21 @@
     TweetCollection.prototype.size = function() {
       return this.tweets.length;
     };
-    TweetCollection.prototype.list = function() {
+    TweetCollection.prototype.formattedTweets = function() {
       var $li, $ul, index, tweet, _len, _ref;
       $ul = $('<ul />', {
-        'class': this.options.className
+        'class': this.options.listClass
       });
       _ref = this.tweets;
       for (index = 0, _len = _ref.length; index < _len; index++) {
         tweet = _ref[index];
         $li = $('<li />', {
-          'class': tweet.listItemClass(index, this.size)
+          'class': tweet.listItemClass(index, this.size())
         });
         $li.append(tweet.content());
         $li.appendTo($ul);
       }
       return $ul;
-    };
-    TweetCollection.prototype.formattedTweets = function() {
-      var $wrapper;
-      $wrapper = $('<div />', {
-        'class': this.options.listClassName
-      });
-      $wrapper.append(this.list());
-      return $wrapper;
     };
     return TweetCollection;
   })();
@@ -162,7 +154,7 @@
   })();
   $(function() {
     $.miniFeed = function(element, options) {
-      var setState, showAnimateProperties, showTweets, state;
+      var setState, showTweets, state;
       this.defaults = {
         username: 'mattaussaguel',
         limit: 6,
@@ -179,13 +171,9 @@
         timeFormat: 'relative',
         timeClass: 'tweet-time',
         onLoad: function() {},
-        onVisible: function() {},
-        showAnimateProperties: {}
+        onLoaded: function() {}
       };
       state = '';
-      showAnimateProperties = {
-        opacity: 1
-      };
       this.settings = {};
       this.$element = $(element);
       setState = function(_state) {
@@ -198,8 +186,8 @@
           var tweetCollection;
           setState('formatting');
           tweetCollection = new TweetCollection(data, this.settings);
-          this.$element.append(tweetCollection.formattedTweets()).animate(this.settings.showAnimateProperties);
-          this.callSettingFunction('onVisible');
+          this.$element.append(tweetCollection.formattedTweets());
+          this.callSettingFunction('onLoaded');
           return setState('loaded');
         }, this));
       }, this);
@@ -209,8 +197,10 @@
       this.getSetting = function(settingKey) {
         return this.settings[settingKey];
       };
-      this.callSettingFunction = function(functionName) {
-        return this.settings[functionName]();
+      this.callSettingFunction = function() {
+        var args, functionName;
+        functionName = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+        return this.settings[functionName](this.$element);
       };
       this.init = function() {
         this.settings = $.extend({}, this.defaults, options);

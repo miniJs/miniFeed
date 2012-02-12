@@ -38,7 +38,7 @@ class Tweet
   originalText: ->
     originalText = @data.text
     originalText = originalText.replace(Tweet.urlRegex(),"<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
-    originalText = originalText.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\"><span>@</span>$1</a>");
+    originalText = originalText.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\">@$1</a>");
     originalText.replace(Tweet.hashRegex(), " <a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a> ")
     
   listItemClass: (index, size) ->
@@ -63,18 +63,13 @@ class TweetCollection
 
   size: -> @tweets.length
   
-  list: ->
-    $ul = $('<ul />', { 'class': @options.className })
+  formattedTweets: ->
+    $ul = $('<ul />', { 'class': @options.listClass })
     for tweet, index in @tweets
-      $li = $('<li />', { 'class' : tweet.listItemClass(index, @size) })
+      $li = $('<li />', { 'class' : tweet.listItemClass(index, @size()) })
       $li.append tweet.content()
       $li.appendTo $ul 
     $ul
-
-  formattedTweets: ->
-    $wrapper = $('<div />', { 'class': @options.listClassName })
-    $wrapper.append(@list())
-    $wrapper
 
 class Time
   constructor: (time, @format) ->
@@ -135,17 +130,12 @@ $ ->
       timeClass:            'tweet-time'                     # class added to the time wrapper
 
       onLoad:               ->                               # Function() called when the tweets are loading,
-      onVisible:            ->                               # Function(feed) called when miniTweet is hidden
-
-      showAnimateProperties: {}                              # animate properties on show, will fadeIn by default
+      onLoaded:             ->                               # Function(feed) called when miniTweet is loaded
     }
 
     ## private variables
     # current state
     state = ''
-
-    # show animate properties
-    showAnimateProperties = { opacity : 1 }
 
     ## public variables
     # plugin settings
@@ -166,10 +156,8 @@ $ ->
       $.getJSON(Tweet.apiUrl(@settings), (data) =>
         setState 'formatting'
         tweetCollection = new TweetCollection(data, @settings)
-        @$element.append(tweetCollection
-                 .formattedTweets())
-                 .animate(@settings.showAnimateProperties)
-        @callSettingFunction 'onVisible'
+        @$element.append(tweetCollection.formattedTweets())
+        @callSettingFunction 'onLoaded'
         setState 'loaded'
       )
 
@@ -181,7 +169,7 @@ $ ->
     @getSetting = (settingKey) -> @settings[settingKey]
 
     # call one of the plugin setting functions
-    @callSettingFunction = (functionName) -> @settings[functionName]()
+    @callSettingFunction = (functionName, args...) -> @settings[functionName](@$element)
 
     # init function
     @init = ->
