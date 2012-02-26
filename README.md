@@ -1,44 +1,40 @@
-# miniFeed jQuery Plugin
-
-By: Matthieu Aussaguel, http://mynameismatthieu.com, @mattaussaguel
-
-
-The Twitter jQuery Plugin you've always been looking for.
+miniFeed jQuery plugin
+======================
 
 miniFeed is very basic but powerful twitter jQuery plugin that allows you to show a twitter feed from any Twitter accounts
 
-If you have any question of find a bug, please raise it <a href="https://github.com/MatthieuA/miniFeed/issues">at GitHub</a> or <a href="http://www.twitter.com/mattaussaguel">on Twitter</a>.
-
-### Info
-
-Developed by "Matthieu Aussaguel":mailto:matthieu.aussaguel@gmail.com, "mynameismatthieu.com":http://mynameismatthieu.com
-
-For updates, follow Matthieu on "Twitter":http://twitter.com/mattaussaguel
-
-## Examples and Instructions
-
-### Basic Example
-
-#### HTML
-
-    <div id="mini-feed"></div>
-
-#### Javascript
-
-    $('#mini-feed').miniFeed({ username  : 'mattaussaguel' });
-
 ### Website Url
-coming soon
+---------------
 
-### Browsers supported
-* Internet Explorer 7+
-* Firefox 3.5+
-* Chrome
-* Safari and Mobile Safari.
+Coming soon.
 
-### TODO
-	- add test coverage
+### Bug tracker
+---------------
 
-## Changelog
+If you find a bug, please raise it the issue here on Github! 
 
-* Initial Release
+https://github.com/miniJs/miniFeed/issues
+
+### Developer
+-------------
+
+Developed by <a href="mailto:matthieu.aussaguel@gmail">Matthieu Aussaguel</a>, <a href="http://mynameismatthieu.com">mynameismatthieu.com</a>
+
++ http://twitter.com/mattaussaguel
++ http://github.com/matthieua
+
+### To Do
+---------
+
+* Add test coverage using jasmine.js
+
+### Licence
+-----------
+
+Copyright &copy; 2012 Matthieu Aussaguel
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
