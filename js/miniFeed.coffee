@@ -1,9 +1,10 @@
 #
 # miniFeed, the Twitter plugin for jQuery
-# Instructions: Coming Soon
+# Instructions: http://minijs.com/plugins/9/feed
 # By: Matthieu Aussaguel, http://www.mynameismatthieu.com, @mattaussaguel
-# Version: 0.2
-# Updated: February 11, 2012
+# Version: 0.2 Beta
+# Updated: April 16, 2012
+# More info: http://minijs.com/
 #
 
 class Tweet
