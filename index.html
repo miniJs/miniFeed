@@ -48,13 +48,14 @@
               timeFormat: 'normal'
             });
 
-          $('#example-3 .show').click(function() {
+          $('#example-3 .show').click(function(e) {
+            e.preventDefault();
             var link = $(this)
             $('#example-3 .mini-feed').miniFeed({
-              'onLoad': function(feed) {
+              onLoad: function(feed) {
                 link.text('Loading...')
               },
-              'onLoaded': function(feed) {
+              onLoaded: function(feed) {
                 link.hide();
                 feed.css({opcacity:0, top: "+" + feed.height() + "px"}).animate({opacity: 'show', top: 0 }, 500, 'linear');
               }
