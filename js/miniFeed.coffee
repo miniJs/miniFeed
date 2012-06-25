@@ -112,7 +112,7 @@ class Time
 $ ->
   $.miniFeed = (element, options) ->
     # default plugin settings
-    @defaults = {
+    @defaults =
       username:             'mattaussaguel'                  # twitter username
       limit:                6                                # number of tweets to be displayed
 
@@ -136,7 +136,6 @@ $ ->
 
       onLoad:               ->                               # Function() called when the tweets are loading,
       onLoaded:             ->                               # Function(feed) called when miniTweet is loaded
-    }
 
     ## private variables
     # current state
@@ -186,6 +185,8 @@ $ ->
 
     # initialise the plugin
     @init()
+
+    this
 
   $.fn.miniFeed = (options) ->
     return this.each ->
