@@ -5,6 +5,7 @@ describe 'miniFeed', ->
   # server.respond()
 
   twitterApiUrlPrefix = "http://api.twitter.com/1/statuses/user_timeline.json?"
+  mockResponse = {username: 'mattaussaguel'}
 
   beforeEach ->
     setFixtures '<div id="feed"></div>'
@@ -91,8 +92,14 @@ describe 'miniFeed', ->
       spyOn( $, 'getJSON' )
       new $.miniFeed( @$element, { onLoad: @callback } )  
 
-      expect( @callback ).toHaveBeenCalled()
+      expect( @callback ).toHaveBeenCalledWith(@$element)
 
-    # onLoaded
+    it 'should call on loaded when tweets have been loaded', ->
+      spyOn( $, 'getJSON' )
+      new $.miniFeed( @$element, { onLoaded: @callback } )  
+
+      $.getJSON.mostRecentCall.args[1]({})
+
+      expect( @callback ).toHaveBeenCalledWith(@$element)
 
 

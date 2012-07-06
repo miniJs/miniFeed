@@ -1,8 +1,11 @@
 (function() {
 
   describe('miniFeed', function() {
-    var twitterApiUrlPrefix;
+    var mockResponse, twitterApiUrlPrefix;
     twitterApiUrlPrefix = "http://api.twitter.com/1/statuses/user_timeline.json?";
+    mockResponse = {
+      username: 'mattaussaguel'
+    };
     beforeEach(function() {
       setFixtures('<div id="feed"></div>');
       return this.$element = $('#feed');
@@ -77,12 +80,20 @@
       beforeEach(function() {
         return this.callback = jasmine.createSpy('callback');
       });
-      return it('should call on load before loading the tweets', function() {
+      it('should call on load before loading the tweets', function() {
         spyOn($, 'getJSON');
         new $.miniFeed(this.$element, {
           onLoad: this.callback
         });
-        return expect(this.callback).toHaveBeenCalled();
+        return expect(this.callback).toHaveBeenCalledWith(this.$element);
+      });
+      return it('should call on loaded when tweets have been loaded', function() {
+        spyOn($, 'getJSON');
+        new $.miniFeed(this.$element, {
+          onLoaded: this.callback
+        });
+        $.getJSON.mostRecentCall.args[1]({});
+        return expect(this.callback).toHaveBeenCalledWith(this.$element);
       });
     });
   });
