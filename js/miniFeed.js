@@ -90,7 +90,7 @@
       apiUrl += "screen_name=" + options.username;
       apiUrl += "&count=" + options.limit;
       if (!options.hideRetweets) {
-        apiUrl += "&include_rts=1";
+        apiUrl += "&include_rts=true";
       }
       apiUrl += "&callback=?";
       return apiUrl;
@@ -219,6 +219,9 @@
       setState = function(_state) {
         return state = _state;
       };
+      this.getState = function() {
+        return state;
+      };
       showTweets = function() {
         _this.callSettingFunction('onLoad');
         setState('loading');
@@ -230,9 +233,6 @@
           _this.callSettingFunction('onLoaded');
           return setState('loaded');
         });
-      };
-      this.getState = function() {
-        return state;
       };
       this.getSetting = function(settingKey) {
         return this.settings[settingKey];

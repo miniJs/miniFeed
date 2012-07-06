@@ -55,7 +55,7 @@ class Tweet
     apiUrl =  "http://api.twitter.com/1/statuses/user_timeline.json?"
     apiUrl += "screen_name=#{options.username}"
     apiUrl += "&count=#{options.limit}"
-    apiUrl += "&include_rts=1" unless options.hideRetweets
+    apiUrl += "&include_rts=true" unless options.hideRetweets
     apiUrl += "&callback=?"
     apiUrl
 
@@ -152,6 +152,10 @@ $ ->
     # set current state
     setState = (_state) -> state = _state      
 
+    ## public methods
+    #get current state
+    @getState = -> state
+
     showTweets = => 
       @callSettingFunction 'onLoad'
       setState 'loading'
@@ -165,10 +169,7 @@ $ ->
         setState 'loaded'
       )
 
-    ## public methods
-    #get current state
-    @getState = -> state
-
+      
     # get particular plugin setting
     @getSetting = (settingKey) -> @settings[settingKey]
 
