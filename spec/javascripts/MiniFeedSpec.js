@@ -6,8 +6,8 @@
       username: 'test'
     };
     beforeEach(function() {
-      loadFixtures('fragment.html');
-      return this.$element = $('#fixtures');
+      setFixtures('<div id="feed"></div>');
+      return this.$element = $('#feed');
     });
     it('should be available on the jQuery object', function() {
       return expect($.fn.miniFeed).toBeDefined();

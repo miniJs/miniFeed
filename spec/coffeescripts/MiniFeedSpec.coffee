@@ -3,8 +3,8 @@ describe 'miniFeed', ->
     username: 'test'
 
   beforeEach ->
-    loadFixtures 'fragment.html'
-    @$element = $('#fixtures')
+    setFixtures '<div id="feed"></div>'
+    @$element = $('#feed')
 
   it 'should be available on the jQuery object', ->
     expect($.fn.miniFeed).toBeDefined()
