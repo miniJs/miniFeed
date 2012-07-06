@@ -45,7 +45,7 @@ describe 'miniFeed', ->
         url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=6&include_rts=true&callback=?"
         expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
 
-      it 'should fetch the last tweets for a custom user if specified'
+      it 'should fetch the last tweets for a custom user if specified', ->
         plugin = new $.miniFeed( @$element, { username: 'foo'} )  
 
         url = "#{twitterApiUrlPrefix}screen_name=foo&count=6&include_rts=true&callback=?"
@@ -58,10 +58,10 @@ describe 'miniFeed', ->
         url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=6&include_rts=true&callback=?"
         expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
 
-      it 'should fetch the last n tweets when specified'
+      it 'should fetch the last n tweets when specified', ->
         plugin = new $.miniFeed( @$element, { limit: 10} )  
 
-        url = "#{twitterApiUrlPrefix}screen_name=foo&count=10&include_rts=true&callback=?"
+        url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=10&include_rts=true&callback=?"
         expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
 
   describe 'tweet format', ->

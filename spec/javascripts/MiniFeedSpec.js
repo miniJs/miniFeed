@@ -37,13 +37,38 @@
       beforeEach(function() {
         return spyOn($, 'getJSON');
       });
-      it('should fetch the last tweets for mattaussaguel by default', function() {
-        var plugin, url;
-        plugin = new $.miniFeed(this.$element);
-        url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&include_rts=true&callback=?";
-        return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
+      describe('username option', function() {
+        it('should fetch the last tweets for mattaussaguel by default', function() {
+          var plugin, url;
+          plugin = new $.miniFeed(this.$element);
+          url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&include_rts=true&callback=?";
+          return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
+        });
+        return it('should fetch the last tweets for a custom user if specified', function() {
+          var plugin, url;
+          plugin = new $.miniFeed(this.$element, {
+            username: 'foo'
+          });
+          url = "" + twitterApiUrlPrefix + "screen_name=foo&count=6&include_rts=true&callback=?";
+          return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
+        });
       });
-      return it('should fetch the last tweets for a custom user if specified');
+      return describe('limit option', function() {
+        it('should fetch the last 6 tweets by default', function() {
+          var plugin, url;
+          plugin = new $.miniFeed(this.$element);
+          url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&include_rts=true&callback=?";
+          return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
+        });
+        return it('should fetch the last n tweets when specified', function() {
+          var plugin, url;
+          plugin = new $.miniFeed(this.$element, {
+            limit: 10
+          });
+          url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=10&include_rts=true&callback=?";
+          return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
+        });
+      });
     });
     describe('tweet format', function() {});
     describe('generated markup', function() {});
