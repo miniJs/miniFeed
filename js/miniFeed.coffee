@@ -108,7 +108,6 @@ class Time
   parsedDate: ->
     Date.parse @time
       
-
 $ ->
   $.miniFeed = (element, options) ->
     # default plugin settings

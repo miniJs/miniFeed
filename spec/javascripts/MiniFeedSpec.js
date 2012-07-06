@@ -126,7 +126,32 @@
         });
       });
     });
-    describe('tweet format', function() {});
+    describe('tweet format', function() {
+      return describe('introText', function() {
+        it('should not add any intro text by default', function() {
+          new $.miniFeed(this.$element);
+          $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse);
+          return expect(this.$element.find('.tweet-text').first()).toHaveText('some text');
+        });
+        return describe('with intro text', function() {
+          beforeEach(function() {
+            new $.miniFeed(this.$element, {
+              introText: 'intro text - '
+            });
+            return $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse);
+          });
+          it('should prepend text with intro text', function() {
+            return expect(this.$element.find('.tweet-text').first().text()).toBe('intro text - some text');
+          });
+          it('should wrap the intro text in a span with intro-text css class', function() {
+            return expect(this.$element.find('span.intro-text').first().text()).toBe('intro text - ');
+          });
+          return it('should add the intro to every tweet', function() {
+            return expect(this.$element.find('.tweet-text > span.intro-text').length).toBe(6);
+          });
+        });
+      });
+    });
     describe('generated markup', function() {
       describe('listClass', function() {
         it('should generate a list item  with css class tweet-list by default', function() {
