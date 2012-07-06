@@ -127,11 +127,11 @@
       });
     });
     describe('tweet format', function() {
-      return describe('introText', function() {
+      describe('introText', function() {
         it('should not add any intro text by default', function() {
           new $.miniFeed(this.$element);
           $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse);
-          return expect(this.$element.find('.tweet-text').first()).toHaveText('some text');
+          return expect(this.$element.find('.tweet-text').first().text()).toBe('some text');
         });
         return describe('with intro text', function() {
           beforeEach(function() {
@@ -149,6 +149,50 @@
           return it('should add the intro to every tweet', function() {
             return expect(this.$element.find('.tweet-text > span.intro-text').length).toBe(6);
           });
+        });
+      });
+      describe('outroText', function() {
+        it('should not add any outro text by default', function() {
+          new $.miniFeed(this.$element);
+          $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse);
+          return expect(this.$element.find('.tweet-text').first().text()).toBe('some text');
+        });
+        return describe('with outro text', function() {
+          beforeEach(function() {
+            new $.miniFeed(this.$element, {
+              outroText: ' - outro text'
+            });
+            return $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse);
+          });
+          it('should prepend text with outro text', function() {
+            return expect(this.$element.find('.tweet-text').first().text()).toBe('some text - outro text');
+          });
+          it('should wrap the outro text in a span with outro-text css class', function() {
+            return expect(this.$element.find('span.outro-text').first().text()).toBe(' - outro text');
+          });
+          return it('should add the outro to every tweet', function() {
+            return expect(this.$element.find('.tweet-text > span.outro-text').length).toBe(6);
+          });
+        });
+      });
+      describe('template', function() {});
+      describe('links', function() {
+        it('should link the username', function() {});
+        it('should link the links', function() {});
+        return it('should link the hashtags', function() {});
+      });
+      return describe('timeFormat', function() {
+        it('should display the time in a relative format by default', function() {
+          new $.miniFeed(this.$element);
+          $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse);
+          return expect(this.$element.find('.tweet-time').first().text()).toMatch(/ago$/);
+        });
+        return it('should display the time in a classic format when specified', function() {
+          new $.miniFeed(this.$element, {
+            timeFormat: 'normal'
+          });
+          $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse);
+          return expect(this.$element.find('.tweet-time').first().text()).not.toMatch(/ago$/);
         });
       });
     });

@@ -130,7 +130,7 @@ $ ->
       hideRetweets:         false                            # hide retweets
       hideReplies:          false                            # hide tweet replies
 
-      timeFormat:           'relative'                       # time format 'normal' | 'elapsed'
+      timeFormat:           'relative'                       # time format 'normal' | 'relative'
       timeClass:            'tweet-time'                     # class added to the time wrapper
 
       onLoad:               ->                               # Function() called when the tweets are loading,

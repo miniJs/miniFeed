@@ -123,7 +123,7 @@ describe 'miniFeed', ->
         new $.miniFeed( @$element )          
 
         $.getJSON.mostRecentCall.args[1]( basicTwitterApiResponse )
-        expect( @$element.find('.tweet-text').first().text ).toHaveText( 'some text'
+        expect( @$element.find('.tweet-text').first().text() ).toBe( 'some text' )
 
       describe 'with intro text', ->
         beforeEach ->
@@ -144,7 +144,7 @@ describe 'miniFeed', ->
         new $.miniFeed( @$element )          
 
         $.getJSON.mostRecentCall.args[1]( basicTwitterApiResponse )
-        expect( @$element.find('.tweet-text').first().text ).toHaveText( 'some text'
+        expect( @$element.find('.tweet-text').first().text() ).toBe( 'some text' )
 
       describe 'with outro text', ->
         beforeEach ->
@@ -155,14 +155,30 @@ describe 'miniFeed', ->
           expect( @$element.find('.tweet-text').first().text() ).toBe 'some text - outro text' 
 
         it 'should wrap the outro text in a span with outro-text css class', ->
-          expect( @$element.find('span.outro-text').first().text() ).toBe '- outro text'
+          expect( @$element.find('span.outro-text').first().text() ).toBe ' - outro text'
 
         it 'should add the outro to every tweet', ->
           expect( @$element.find('.tweet-text > span.outro-text').length ).toBe 6
 
-    # username links
-    # links
-    # timeFormat
+    describe 'template', ->
+
+    describe 'links', ->
+      it 'should link the username', ->
+      it 'should link the links', ->
+      it 'should link the hashtags', ->
+
+    describe 'timeFormat', ->
+      it 'should display the time in a relative format by default', ->
+        new $.miniFeed( @$element )
+        
+        $.getJSON.mostRecentCall.args[1]( basicTwitterApiResponse )
+        expect( @$element.find('.tweet-time').first().text() ).toMatch /ago$/
+
+      it 'should display the time in a classic format when specified', ->
+        new $.miniFeed( @$element, { timeFormat: 'normal'} )
+        
+        $.getJSON.mostRecentCall.args[1]( basicTwitterApiResponse )
+        expect( @$element.find('.tweet-time').first().text() ).not.toMatch /ago$/
 
   describe 'generated markup', ->
     describe 'listClass', ->
