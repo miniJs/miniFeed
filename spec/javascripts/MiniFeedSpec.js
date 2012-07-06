@@ -26,6 +26,10 @@
       expect(plugin.settings.username).toBe(options.username);
       return expect(plugin.settings.limit).toBe(options.limit);
     });
+    describe('configuration', function() {});
+    describe('tweet format', function() {});
+    describe('generated markup', function() {});
+    describe('restrictions', function() {});
     return describe('callbacks', function() {});
   });
 

@@ -23,17 +23,17 @@ describe 'miniFeed', ->
     expect( plugin.settings.username ).toBe options.username
     expect( plugin.settings.limit ).toBe options.limit
 
-  description: 'configuration', ->
+  describe 'configuration', ->
     # username
     # limit
 
-  description: 'tweet format', ->
+  describe 'tweet format', ->
     # template
     # intro text
     # outro text
     # timeFormat
 
-  describe: 'generated markup', ->
+  describe 'generated markup', ->
     # listClass
     # firstClass
     # lastClass
@@ -42,7 +42,7 @@ describe 'miniFeed', ->
     # avatarClass
     # timeClass
 
-  describe: 'restrictions', ->
+  describe 'restrictions', ->
     # hideRetweets
     # hideReplies
 
