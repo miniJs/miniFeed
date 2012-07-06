@@ -5,16 +5,58 @@ describe 'miniFeed', ->
   # server.respond()
 
   twitterApiUrlPrefix = "http://api.twitter.com/1/statuses/user_timeline.json?"
-  mockResponse = {username: 'mattaussaguel'}
+  basicTwitterApiResponse = 
+    [
+      {
+        created_at: "Sun Jul 01 00:00:00 +0000 2012"
+        text: "some text"
+        in_reply_to_status_id: null
+        user:
+          profile_image_url: "image.png"
+      },
+      {
+        created_at: "Sun Jul 01 00:00:00 +0000 2012"
+        text: "some text"
+        in_reply_to_status_id: 1
+        user:
+          profile_image_url: "image.png"
+      },
+      {
+        created_at: "Sun Jul 01 00:00:00 +0000 2012"
+        text: "some text"
+        in_reply_to_status_id: null
+        user:
+          profile_image_url: "image.png"
+      },
+      {
+        created_at: "Sun Jul 01 00:00:00 +0000 2012"
+        text: "some text"
+        in_reply_to_status_id: null
+        user:
+          profile_image_url: "image.png"
+      },
+      {
+        created_at: "Sun Jul 01 00:00:00 +0000 2012"
+        text: "some text"
+        in_reply_to_status_id: null
+        user:
+          profile_image_url: "image.png"
+      },
+      {
+        created_at: "Sun Jul 01 00:00:00 +0000 2012"
+        text: "some text"
+        in_reply_to_status_id: null
+        user:
+          profile_image_url: "image.png"
+      }
+    ]
 
   beforeEach ->
     setFixtures '<div id="feed"></div>'
     @$element = $('#feed')
+    spyOn($, 'getJSON')
 
   describe 'plugin behavior', ->
-    beforeEach ->
-      spyOn($, 'getJSON')
-
     it 'should be available on the jQuery object', ->
       expect( $.fn.miniFeed ).toBeDefined()
 
@@ -36,9 +78,6 @@ describe 'miniFeed', ->
       expect( plugin.settings.limit ).toBe options.limit
 
   describe 'api url construction', ->
-    beforeEach ->
-      spyOn($, 'getJSON')
-
     describe 'username option', ->
       it 'should fetch the last tweets for mattaussaguel by default', ->
         new $.miniFeed( @$element )  
@@ -82,32 +121,136 @@ describe 'miniFeed', ->
     # template
     # intro text
     # outro text
+    # username links
+    # links
     # timeFormat
-    # hideReplies
 
   describe 'generated markup', ->
-    # listClass
-    # firstClass
-    # lastClass
-    # tweetClass
-    # avatarSize
-    # avatarClass
-    # timeClass    
+    describe 'listClass', ->
+      it 'should generate a list item  with css class tweet-list by default', ->
+        new $.miniFeed( @$element )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.children('ul.tweet-list').first() ).toExist()
+
+      it 'should generate list item with custom css class', ->
+        new $.miniFeed( @$element, { listClass: 'custom-class' } )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.children('ul').first() ).toHaveClass( 'custom-class' )
+        expect( @$element.children('ul') ).not.toHaveClass( 'tweet-list' )
+
+    describe 'firstClass', ->
+      it 'should add "first" css class on the first tweet', ->
+        new $.miniFeed( @$element )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('li').first() ).toHaveClass( 'first' )
+
+      it 'should add custom css class on the first tweet when specified', ->
+        new $.miniFeed( @$element, { firstClass: 'custom-class' } )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('li').first() ).toHaveClass( 'custom-class' )
+        expect( @$element.find('li').first() ).not.toHaveClass( 'first' )
+
+
+    describe 'lastClass', ->
+      it 'should add "last" css class on the last tweet', ->
+        new $.miniFeed( @$element )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('li').last() ).toHaveClass( 'last' )
+
+      it 'should add custom css class on the last tweet when specified', ->
+        new $.miniFeed( @$element, { lastClass: 'custom-class' } )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('li').last() ).toHaveClass( 'custom-class' )
+        expect( @$element.find('li').last() ).not.toHaveClass( 'last' )
+
+    describe 'tweetClass', ->
+      it 'should add "tweet-text" css class on the text wrapper by default', ->
+        new $.miniFeed( @$element )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('ul > li > span.tweet-text').length ).toBe 6
+
+      it 'should add a custom css class on the text wrapper when specified', ->
+        new $.miniFeed( @$element, { tweetClass: 'custom-class' } )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('ul > li > span.tweet-text').length ).toBe 0
+        expect( @$element.find('ul > li > span.custom-class').length ).toBe 6
+
+    describe 'avatarSize', ->
+      it 'should add set the avatar width and height to 48px by default', ->
+        new $.miniFeed( @$element )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('img[width="48"]').length ).toBe 6
+        expect( @$element.find('img[height="48"]').length ).toBe 6
+
+      it 'should add set a custom avatar width and height when specified', ->
+        new $.miniFeed( @$element, { avatarSize: 24 } )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('img[width="24"]').length ).toBe 6
+        expect( @$element.find('img[height="24"]').length ).toBe 6
+
+
+    describe 'avatarClass', ->
+      it 'should add "tweet-avatar" css class on the avatar image tag by default', ->
+        new $.miniFeed( @$element )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('ul > li > img.tweet-avatar').length ).toBe 6
+
+      it 'should add a custom css class on the avatar image if specified', ->
+        new $.miniFeed( @$element, { avatarClass: 'custom-class' } )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('ul > li > img.tweet-avatar').length ).toBe 0
+        expect( @$element.find('ul > li > img.custom-class').length ).toBe 6
+
+    describe 'timeClass', ->
+      it 'should add "tweet-time" css class on the span wrapping the time by default', ->
+        new $.miniFeed( @$element )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('ul > li > span.tweet-time').length ).toBe 6
+
+      it 'should add a custom css class on the span wrapping the time', ->
+        new $.miniFeed( @$element, { timeClass: 'custom-class' } )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('ul > li > span.custom-class').length ).toBe 6
+        expect( @$element.find('ul > li > span.tweet-time').length ).toBe 0
+
+    describe 'hideReplies', ->
+      it 'should not hide replies by default', ->
+        new $.miniFeed( @$element )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('li').length ).toBe 6
+
+      it 'should hide replies when specified', ->
+        new $.miniFeed( @$element, hideReplies: true )
+        $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse)
+
+        expect( @$element.find('li').length ).toBe 5
 
   describe 'callbacks', ->
     beforeEach ->
       @callback = jasmine.createSpy( 'callback' )
 
     it 'should call on load before loading the tweets', ->
-      spyOn( $, 'getJSON' )
       new $.miniFeed( @$element, { onLoad: @callback } )  
 
       expect( @callback ).toHaveBeenCalledWith(@$element)
 
     it 'should call on loaded when tweets have been loaded', ->
-      spyOn( $, 'getJSON' )
       new $.miniFeed( @$element, { onLoaded: @callback } )  
-
       $.getJSON.mostRecentCall.args[1]({})
 
       expect( @callback ).toHaveBeenCalledWith(@$element)
