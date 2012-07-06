@@ -1,10 +1,6 @@
 (function() {
 
   describe('miniFeed', function() {
-    var options;
-    options = {
-      username: 'test'
-    };
     beforeEach(function() {
       setFixtures('<div id="feed"></div>');
       return this.$element = $('#feed');
@@ -13,18 +9,24 @@
       return expect($.fn.miniFeed).toBeDefined();
     });
     it('should be chainable', function() {
-      return expect(this.$element.miniFeed(options)).toBe(this.$element);
+      return expect(this.$element.miniFeed()).toBe(this.$element);
     });
     it('should offer default values', function() {
       var plugin;
-      plugin = new $.miniFeed(this.$element[0], options);
+      plugin = new $.miniFeed(this.$element);
       return expect(plugin.defaults).toBeDefined();
     });
-    return it('should overwrites the settings', function() {
-      var plugin;
-      plugin = new $.miniFeed(this.$element[0], options);
-      return expect(plugin.settings.username).toBe(options.username);
+    it('should overwrites the settings', function() {
+      var options, plugin;
+      options = {
+        username: 'test',
+        limit: 4
+      };
+      plugin = new $.miniFeed(this.$element, options);
+      expect(plugin.settings.username).toBe(options.username);
+      return expect(plugin.settings.limit).toBe(options.limit);
     });
+    return describe('callbacks', function() {});
   });
 
 }).call(this);

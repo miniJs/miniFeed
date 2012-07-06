@@ -1,22 +1,53 @@
-describe 'miniFeed', ->
-  options =
-    username: 'test'
-
+describe 'miniFeed', ->  
   beforeEach ->
     setFixtures '<div id="feed"></div>'
     @$element = $('#feed')
 
   it 'should be available on the jQuery object', ->
-    expect($.fn.miniFeed).toBeDefined()
+    expect( $.fn.miniFeed ).toBeDefined()
 
   it 'should be chainable', ->
-    expect(@$element.miniFeed(options)).toBe(@$element)
+    expect( @$element.miniFeed() ).toBe @$element 
 
   it 'should offer default values', ->
-    plugin = new $.miniFeed(@$element[0], options)
+    plugin = new $.miniFeed @$element
 
-    expect(plugin.defaults).toBeDefined()
+    expect( plugin.defaults ).toBeDefined()
 
   it 'should overwrites the settings', ->
-    plugin = new $.miniFeed(@$element[0], options)
-    expect(plugin.settings.username).toBe(options.username)
+    options = 
+      username: 'test'
+      limit: 4
+    plugin = new $.miniFeed( @$element, options )
+
+    expect( plugin.settings.username ).toBe options.username
+    expect( plugin.settings.limit ).toBe options.limit
+
+  description: 'configuration', ->
+    # username
+    # limit
+
+  description: 'tweet format', ->
+    # template
+    # intro text
+    # outro text
+    # timeFormat
+
+  describe: 'generated markup', ->
+    # listClass
+    # firstClass
+    # lastClass
+    # tweetClass
+    # avatarSize
+    # avatarClass
+    # timeClass
+
+  describe: 'restrictions', ->
+    # hideRetweets
+    # hideReplies
+
+  describe 'callbacks', ->
+    # onLoad
+    # onLoaded
+
+
