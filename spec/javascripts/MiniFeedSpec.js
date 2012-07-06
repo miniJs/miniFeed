@@ -39,14 +39,14 @@
       });
       describe('username option', function() {
         it('should fetch the last tweets for mattaussaguel by default', function() {
-          var plugin, url;
-          plugin = new $.miniFeed(this.$element);
+          var url;
+          new $.miniFeed(this.$element);
           url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&include_rts=true&callback=?";
           return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
         });
         return it('should fetch the last tweets for a custom user if specified', function() {
-          var plugin, url;
-          plugin = new $.miniFeed(this.$element, {
+          var url;
+          new $.miniFeed(this.$element, {
             username: 'foo'
           });
           url = "" + twitterApiUrlPrefix + "screen_name=foo&count=6&include_rts=true&callback=?";
@@ -55,14 +55,14 @@
       });
       return describe('limit option', function() {
         it('should fetch the last 6 tweets by default', function() {
-          var plugin, url;
-          plugin = new $.miniFeed(this.$element);
+          var url;
+          new $.miniFeed(this.$element);
           url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&include_rts=true&callback=?";
           return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
         });
         return it('should fetch the last n tweets when specified', function() {
-          var plugin, url;
-          plugin = new $.miniFeed(this.$element, {
+          var url;
+          new $.miniFeed(this.$element, {
             limit: 10
           });
           url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=10&include_rts=true&callback=?";
@@ -73,7 +73,18 @@
     describe('tweet format', function() {});
     describe('generated markup', function() {});
     describe('restrictions', function() {});
-    return describe('callbacks', function() {});
+    return describe('callbacks', function() {
+      beforeEach(function() {
+        return this.callback = jasmine.createSpy('callback');
+      });
+      return it('should call on load before loading the tweets', function() {
+        spyOn($, 'getJSON');
+        new $.miniFeed(this.$element, {
+          onLoad: this.callback
+        });
+        return expect(this.callback).toHaveBeenCalled();
+      });
+    });
   });
 
 }).call(this);
