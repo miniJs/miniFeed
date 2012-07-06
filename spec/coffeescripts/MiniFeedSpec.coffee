@@ -44,7 +44,7 @@ describe 'miniFeed', ->
       },
       {
         created_at: "Sun Jul 01 00:00:00 +0000 2012"
-        text: "some text"
+        text: "some text @jquery some text http://jquery.com some text #jquery"
         in_reply_to_status_id: null
         user:
           profile_image_url: "image.png"
@@ -163,9 +163,28 @@ describe 'miniFeed', ->
     describe 'template', ->
 
     describe 'links', ->
-      it 'should link the username', ->
-      it 'should link the links', ->
-      it 'should link the hashtags', ->
+      beforeEach ->
+        new $.miniFeed( @$element )          
+        $.getJSON.mostRecentCall.args[1]( basicTwitterApiResponse )
+
+        @$tweet = @$element.find('li:last > .tweet-text').first()
+
+      it 'should link usernames to twitter profile page', ->
+        $link = @$tweet.find( 'a.mini-feed-user-link' )
+
+        expect( $link ).toExist()
+        expect( $link.text() ).toBe '@jquery'
+        expect( $link.attr('href') ).toBe 'http://www.twitter.com/jquery'
+
+      it 'should link links', ->
+        $link = @$tweet.find( 'a.mini-feed-link' )
+
+        expect( $link ).toExist()
+        expect( $link.text() ).toBe 'http://jquery.com'
+        expect( $link.attr('href') ).toBe 'http://jquery.com'
+
+      it 'should link hashtags', ->
+        expect( @$tweet.html() ).toContain '<a href="http://search.twitter.com/search?q=&amp;tag=jquery&amp;lang=all">#jquery</a>'
 
     describe 'timeFormat', ->
       it 'should display the time in a relative format by default', ->

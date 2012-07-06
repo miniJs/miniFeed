@@ -41,7 +41,7 @@
         }
       }, {
         created_at: "Sun Jul 01 00:00:00 +0000 2012",
-        text: "some text",
+        text: "some text @jquery some text http://jquery.com some text #jquery",
         in_reply_to_status_id: null,
         user: {
           profile_image_url: "image.png"
@@ -177,9 +177,28 @@
       });
       describe('template', function() {});
       describe('links', function() {
-        it('should link the username', function() {});
-        it('should link the links', function() {});
-        return it('should link the hashtags', function() {});
+        beforeEach(function() {
+          new $.miniFeed(this.$element);
+          $.getJSON.mostRecentCall.args[1](basicTwitterApiResponse);
+          return this.$tweet = this.$element.find('li:last > .tweet-text').first();
+        });
+        it('should link usernames to twitter profile page', function() {
+          var $link;
+          $link = this.$tweet.find('a.mini-feed-user-link');
+          expect($link).toExist();
+          expect($link.text()).toBe('@jquery');
+          return expect($link.attr('href')).toBe('http://www.twitter.com/jquery');
+        });
+        it('should link links', function() {
+          var $link;
+          $link = this.$tweet.find('a.mini-feed-link');
+          expect($link).toExist();
+          expect($link.text()).toBe('http://jquery.com');
+          return expect($link.attr('href')).toBe('http://jquery.com');
+        });
+        return it('should link hashtags', function() {
+          return expect(this.$tweet.html()).toContain('<a href="http://search.twitter.com/search?q=&amp;tag=jquery&amp;lang=all">#jquery</a>');
+        });
       });
       return describe('timeFormat', function() {
         it('should display the time in a relative format by default', function() {
