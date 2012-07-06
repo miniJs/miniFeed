@@ -35,7 +35,7 @@ describe 'miniFeed', ->
       expect( plugin.settings.username ).toBe options.username
       expect( plugin.settings.limit ).toBe options.limit
 
-  describe 'configuration', ->
+  describe 'api url construction', ->
     beforeEach ->
       spyOn($, 'getJSON')
 
@@ -65,11 +65,25 @@ describe 'miniFeed', ->
         url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=10&include_rts=true&callback=?"
         expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
 
+    describe 'hide retweets', ->
+      it 'should include retweets by default', ->
+        new $.miniFeed( @$element )  
+
+        url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=6&include_rts=true&callback=?"
+        expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
+
+      it 'should not include retweets if hideRetweets is true', ->
+        new $.miniFeed( @$element, { hideRetweets: true} )  
+
+        url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=6&callback=?"
+        expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
+
   describe 'tweet format', ->
     # template
     # intro text
     # outro text
     # timeFormat
+    # hideReplies
 
   describe 'generated markup', ->
     # listClass
@@ -78,11 +92,7 @@ describe 'miniFeed', ->
     # tweetClass
     # avatarSize
     # avatarClass
-    # timeClass
-
-  describe 'restrictions', ->
-    # hideRetweets
-    # hideReplies
+    # timeClass    
 
   describe 'callbacks', ->
     beforeEach ->
@@ -101,5 +111,3 @@ describe 'miniFeed', ->
       $.getJSON.mostRecentCall.args[1]({})
 
       expect( @callback ).toHaveBeenCalledWith(@$element)
-
-

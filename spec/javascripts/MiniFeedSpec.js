@@ -36,7 +36,7 @@
         return expect(plugin.settings.limit).toBe(options.limit);
       });
     });
-    describe('configuration', function() {
+    describe('api url construction', function() {
       beforeEach(function() {
         return spyOn($, 'getJSON');
       });
@@ -56,7 +56,7 @@
           return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
         });
       });
-      return describe('limit option', function() {
+      describe('limit option', function() {
         it('should fetch the last 6 tweets by default', function() {
           var url;
           new $.miniFeed(this.$element);
@@ -72,10 +72,25 @@
           return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
         });
       });
+      return describe('hide retweets', function() {
+        it('should include retweets by default', function() {
+          var url;
+          new $.miniFeed(this.$element);
+          url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&include_rts=true&callback=?";
+          return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
+        });
+        return it('should not include retweets if hideRetweets is true', function() {
+          var url;
+          new $.miniFeed(this.$element, {
+            hideRetweets: true
+          });
+          url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&callback=?";
+          return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
+        });
+      });
     });
     describe('tweet format', function() {});
     describe('generated markup', function() {});
-    describe('restrictions', function() {});
     return describe('callbacks', function() {
       beforeEach(function() {
         return this.callback = jasmine.createSpy('callback');
