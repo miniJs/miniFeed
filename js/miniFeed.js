@@ -77,7 +77,7 @@
     };
 
     Tweet.prototype.avatarUrl = function() {
-      return this.data.user.profile_image_url;
+      return this.data.user.profile_image_url_https;
     };
 
     Tweet.prototype.isReply = function() {
@@ -86,7 +86,7 @@
 
     Tweet.apiUrl = function(options) {
       var apiUrl;
-      apiUrl = "http://api.twitter.com/1/statuses/user_timeline.json?";
+      apiUrl = "https://api.twitter.com/1/statuses/user_timeline.json?";
       apiUrl += "screen_name=" + options.username;
       apiUrl += "&count=" + options.limit;
       if (!options.hideRetweets) {
