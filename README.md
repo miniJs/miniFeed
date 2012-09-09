@@ -16,6 +16,10 @@ If you find a bug, please raise it the issue here on Github!
 
 https://github.com/miniJs/miniFeed/issues
 
+## Update instructions
+
+[MiniBoilerplate](http://miniboilerplate.com/) is used to create and maintain the plugin. Follow the instructions on the [website](http://miniboilerplate.com/) if you want to contribute or apply your own changes.
+
 ## Developer
 
 Developed by [Matthieu Aussaguel](mailto:matthieu.aussaguel@gmail.com), [mynameismatthieu.com](http://mynameismatthieu.com)
