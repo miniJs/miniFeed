@@ -23,10 +23,6 @@ Developed by [Matthieu Aussaguel](mailto:matthieu.aussaguel@gmail.com), [mynamei
 + http://twitter.com/mattaussaguel
 + http://github.com/matthieua
 
-## To Do
-
-* Add test coverage
-
 ## Licence
 
 Copyright &copy; 2012 Matthieu Aussaguel
