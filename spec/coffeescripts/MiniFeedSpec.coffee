@@ -4,7 +4,7 @@ describe 'miniFeed', ->
   # server.respondWith( "GET", url, [200, { "Content-Type": "application/json" },'[{ "id": 12, "comment": "Hey there" }]'] )
   # server.respond()
 
-  twitterApiUrlPrefix = "http://api.twitter.com/1/statuses/user_timeline.json?"
+  twitterApiUrlPrefix = "https://api.twitter.com/1/statuses/user_timeline.json?"
   basicTwitterApiResponse = 
     [
       {
@@ -12,42 +12,42 @@ describe 'miniFeed', ->
         text: "some text"
         in_reply_to_status_id: null
         user:
-          profile_image_url: "image.png"
+          profile_image_url_https: "image.png"
       },
       {
         created_at: "Sun Jul 01 00:00:00 +0000 2012"
         text: "some text"
         in_reply_to_status_id: 1
         user:
-          profile_image_url: "image.png"
+          profile_image_url_https: "image.png"
       },
       {
         created_at: "Sun Jul 01 00:00:00 +0000 2012"
         text: "some text"
         in_reply_to_status_id: null
         user:
-          profile_image_url: "image.png"
+          profile_image_url_https: "image.png"
       },
       {
         created_at: "Sun Jul 01 00:00:00 +0000 2012"
         text: "some text"
         in_reply_to_status_id: null
         user:
-          profile_image_url: "image.png"
+          profile_image_url_https: "image.png"
       },
       {
         created_at: "Sun Jul 01 00:00:00 +0000 2012"
         text: "some text"
         in_reply_to_status_id: null
         user:
-          profile_image_url: "image.png"
+          profile_image_url_https: "image.png"
       },
       {
         created_at: "Sun Jul 01 00:00:00 +0000 2012"
         text: "some text @jquery some text http://jquery.com some text #jquery"
         in_reply_to_status_id: null
         user:
-          profile_image_url: "image.png"
+          profile_image_url_https: "image.png"
       }
     ]
 
