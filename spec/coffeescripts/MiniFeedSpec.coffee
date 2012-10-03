@@ -118,7 +118,7 @@ describe 'miniFeed', ->
         expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
 
       it 'should not include retweets if hideRetweets is true', ->
-        new $.miniFeed( @$element, { hideRetweets: true} )  
+        new $.miniFeed( @$element, { hideRetweets: true } )  
 
         url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=6&callback=?"
         expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
