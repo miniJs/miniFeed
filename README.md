@@ -4,7 +4,7 @@ miniFeed is very basic but powerful twitter jQuery plugin that allows you to sho
 
 ## Version
 
-v1.0 stable
+v1.1 stable
 
 ## Website Url
 
@@ -12,7 +12,7 @@ http://minijs.com/plugins/9/feed
 
 ## Bug tracker
 
-If you find a bug, please raise it the issue here on Github! 
+If you find a bug, please raise it the issue here on Github!
 
 https://github.com/miniJs/miniFeed/issues
 
