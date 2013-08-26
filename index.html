@@ -30,7 +30,7 @@
           <h2>Events / Animation</h2>
           <a href="#" class="show">Click Here</a>
           <div class="mini-feed">
-            
+
           </div>
         </section>
       </div>
@@ -41,11 +41,12 @@
     <script>
       $(function() {
           $('#example-1 .mini-feed').miniFeed();
-          
+
           $('#example-2 .mini-feed').miniFeed({
-              template: '{time}{tweet}', 
-              limit: 8, 
-              timeFormat: 'normal'
+              template: '{time}{tweet}',
+              limit: 8,
+              timeFormat: 'normal',
+              hideReplies: true
             });
 
           $('#example-3 .show').click(function(e) {
@@ -59,9 +60,9 @@
                 link.hide();
                 feed.css({opcacity:0, top: "+" + feed.height() + "px"}).animate({opacity: 'show', top: 0 }, 500, 'linear');
               }
-            });  
+            });
           })
-          
+
       });
     </script>
   </body>

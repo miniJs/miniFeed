@@ -24,11 +24,11 @@ class Tweet
   tweet: ->
     tweet =  ''
     tweet =  "<span class='intro-text'>#{@options.introText}</span>" unless @options.introText is null
-    tweet += @originalText() 
+    tweet += @originalText()
     tweet += "<span class='outro-text'>#{@options.outroText}</span>" unless @options.outroText is null
 
     "<span class='#{@options.tweetClass}'>#{tweet}</span>"
-    
+
   avatar: ->
     "<img src='#{@avatarUrl()}' class='#{@options.avatarClass}' title='#{@options.username}' height='#{@options.avatarSize}' width='#{@options.avatarSize}'/>"
 
@@ -41,7 +41,7 @@ class Tweet
     originalText = originalText.replace(Tweet.urlRegex(),"<a class=\"mini-feed-link\" href=\"$1\">$1</a>");
     originalText = originalText.replace(Tweet.userRegex(),"<a class=\"mini-feed-user-link\" href=\"http://www.twitter.com/$1\">@$1</a>");
     originalText.replace(Tweet.hashRegex(), " <a href=\"http://search.twitter.com/search?q=&tag=$1&lang=all\">#$1</a> ")
-    
+
   listItemClass: (index, size) ->
     return @options.firstClass if index is 0
     return @options.lastClass  if index is (size - 1)
@@ -50,14 +50,8 @@ class Tweet
 
   isReply: -> @data.in_reply_to_status_id?
 
-  # class methods
   @apiUrl: (options) ->
-    apiUrl =  "https://api.twitter.com/1/statuses/user_timeline.json?"
-    apiUrl += "screen_name=#{options.username}"
-    apiUrl += "&count=#{options.limit}"
-    apiUrl += "&include_rts=true" unless options.hideRetweets
-    apiUrl += "&callback=?"
-    apiUrl
+    "http://twitcher.steer.me/user_timeline/#{options.username}"
 
 class TweetCollection
   constructor: (apiData, @options) ->
@@ -65,14 +59,16 @@ class TweetCollection
     @tweets.push(new Tweet(tweet, @options)) for tweet in apiData
 
   size: -> @tweets.length
-  
+
   formattedTweets: ->
     $ul = $('<ul />', { 'class': @options.listClass })
+    realIndex = 0
     for tweet, index in @tweets
-      unless @options.hideReplies and tweet.isReply()
+      unless (@options.hideReplies and tweet.isReply()) || (@options.limit and @options.limit <= realIndex)
         $li = $('<li />', { 'class' : tweet.listItemClass(index, @size()) })
         $li.append tweet.content()
-        $li.appendTo $ul 
+        $li.appendTo $ul
+        realIndex++
     $ul
 
 class Time
@@ -107,7 +103,7 @@ class Time
 
   parsedDate: ->
     Date.parse @time
-      
+
 $ ->
   $.miniFeed = (element, options) ->
     # default plugin settings
@@ -127,7 +123,6 @@ $ ->
       avatarClass:          'tweet-avatar'                   # avatar class name
 
       tweetClass:          'tweet-text'                      # class added the text wrapper
-      hideRetweets:         false                            # hide retweets
       hideReplies:          false                            # hide tweet replies
 
       timeFormat:           'relative'                       # time format 'normal' | 'relative'
@@ -149,13 +144,13 @@ $ ->
 
     ## private methods
     # set current state
-    setState = (_state) -> state = _state      
+    setState = (_state) -> state = _state
 
     ## public methods
     #get current state
     @getState = -> state
 
-    showTweets = => 
+    showTweets = =>
       @callSettingFunction 'onLoad'
       setState 'loading'
 
@@ -168,7 +163,7 @@ $ ->
         setState 'loaded'
       )
 
-      
+
     # get particular plugin setting
     @getSetting = (settingKey) -> @settings[settingKey]
 

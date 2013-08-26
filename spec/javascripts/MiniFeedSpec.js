@@ -1,7 +1,7 @@
 
 describe('miniFeed', function() {
   var basicTwitterApiResponse, mockResponseWithOptions, twitterApiUrlPrefix;
-  twitterApiUrlPrefix = "https://api.twitter.com/1/statuses/user_timeline.json?";
+  twitterApiUrlPrefix = "http://twitcher.steer.me/user_timeline";
   basicTwitterApiResponse = [
     {
       created_at: "Sun Jul 01 00:00:00 +0000 2012",
@@ -86,53 +86,11 @@ describe('miniFeed', function() {
     });
   });
   describe('api url construction', function() {
-    describe('username option', function() {
-      it('should fetch the last tweets for mattaussaguel by default', function() {
-        var url;
-        new $.miniFeed(this.$element);
-        url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&include_rts=true&callback=?";
-        return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
-      });
-      return it('should fetch the last tweets for a custom user if specified', function() {
-        var url;
-        new $.miniFeed(this.$element, {
-          username: 'foo'
-        });
-        url = "" + twitterApiUrlPrefix + "screen_name=foo&count=6&include_rts=true&callback=?";
-        return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
-      });
-    });
-    describe('limit option', function() {
-      it('should fetch the last 6 tweets by default', function() {
-        var url;
-        new $.miniFeed(this.$element);
-        url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&include_rts=true&callback=?";
-        return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
-      });
-      return it('should fetch the last n tweets when specified', function() {
-        var url;
-        new $.miniFeed(this.$element, {
-          limit: 10
-        });
-        url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=10&include_rts=true&callback=?";
-        return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
-      });
-    });
-    return describe('hide retweets', function() {
-      it('should include retweets by default', function() {
-        var url;
-        new $.miniFeed(this.$element);
-        url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&include_rts=true&callback=?";
-        return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
-      });
-      return it('should not include retweets if hideRetweets is true', function() {
-        var url;
-        new $.miniFeed(this.$element, {
-          hideRetweets: true
-        });
-        url = "" + twitterApiUrlPrefix + "screen_name=mattaussaguel&count=6&callback=?";
-        return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
-      });
+    return it('should fetch the last tweets for mattaussaguel by default', function() {
+      var url;
+      new $.miniFeed(this.$element);
+      url = "" + twitterApiUrlPrefix + "/mattaussaguel";
+      return expect($.getJSON).toHaveBeenCalledWith(url, jasmine.any(Function));
     });
   });
   describe('tweet format', function() {

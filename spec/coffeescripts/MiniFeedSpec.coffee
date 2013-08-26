@@ -1,11 +1,6 @@
-describe 'miniFeed', ->  
-  # server = sinon.fakeServer.create()
-  # url = "https://api.twitter.com/1/statuses/user_timeline.json?screen_name=mattaussaguel&count=6&include_rts=true"
-  # server.respondWith( "GET", url, [200, { "Content-Type": "application/json" },'[{ "id": 12, "comment": "Hey there" }]'] )
-  # server.respond()
-
-  twitterApiUrlPrefix = "https://api.twitter.com/1/statuses/user_timeline.json?"
-  basicTwitterApiResponse = 
+describe 'miniFeed', ->
+  twitterApiUrlPrefix = "http://twitcher.steer.me/user_timeline"
+  basicTwitterApiResponse =
     [
       {
         created_at: "Sun Jul 01 00:00:00 +0000 2012"
@@ -52,7 +47,7 @@ describe 'miniFeed', ->
     ]
 
   mockResponseWithOptions = (@$element, options = {} ) ->
-    plugin = new $.miniFeed( @$element, options )    
+    plugin = new $.miniFeed( @$element, options )
     $.getJSON.mostRecentCall.args[1]( basicTwitterApiResponse )
     plugin
 
@@ -67,7 +62,7 @@ describe 'miniFeed', ->
       expect( $.fn.miniFeed ).toBeDefined()
 
     it 'should be chainable', ->
-      expect( @$element.miniFeed() ).toBe @$element 
+      expect( @$element.miniFeed() ).toBe @$element
 
     it 'should offer default values', ->
       plugin = new $.miniFeed @$element
@@ -75,7 +70,7 @@ describe 'miniFeed', ->
       expect( plugin.defaults ).toBeDefined()
 
     it 'should overwrites the settings', ->
-      options = 
+      options =
         username: 'test'
         limit: 4
       plugin = new $.miniFeed( @$element, options )
@@ -84,44 +79,12 @@ describe 'miniFeed', ->
       expect( plugin.settings.limit ).toBe options.limit
 
   describe 'api url construction', ->
-    describe 'username option', ->
-      it 'should fetch the last tweets for mattaussaguel by default', ->
-        new $.miniFeed( @$element )  
+    it 'should fetch the last tweets for mattaussaguel by default', ->
+      new $.miniFeed( @$element )
 
-        url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=6&include_rts=true&callback=?"
-        expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
+      url = "#{twitterApiUrlPrefix}/mattaussaguel"
+      expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
 
-      it 'should fetch the last tweets for a custom user if specified', ->
-        new $.miniFeed( @$element, { username: 'foo'} )  
-
-        url = "#{twitterApiUrlPrefix}screen_name=foo&count=6&include_rts=true&callback=?"
-        expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
-
-    describe 'limit option', ->
-      it 'should fetch the last 6 tweets by default', ->
-        new $.miniFeed( @$element )  
-
-        url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=6&include_rts=true&callback=?"
-        expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
-
-      it 'should fetch the last n tweets when specified', ->
-        new $.miniFeed( @$element, { limit: 10} )  
-
-        url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=10&include_rts=true&callback=?"
-        expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
-
-    describe 'hide retweets', ->
-      it 'should include retweets by default', ->
-        new $.miniFeed( @$element )  
-
-        url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=6&include_rts=true&callback=?"
-        expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
-
-      it 'should not include retweets if hideRetweets is true', ->
-        new $.miniFeed( @$element, { hideRetweets: true } )  
-
-        url = "#{twitterApiUrlPrefix}screen_name=mattaussaguel&count=6&callback=?"
-        expect($.getJSON).toHaveBeenCalledWith( url, jasmine.any( Function ) )
 
   describe 'tweet format', ->
     describe 'introText', ->
@@ -135,7 +98,7 @@ describe 'miniFeed', ->
           mockResponseWithOptions( @$element, { introText: 'intro text - ' } )
 
         it 'should prepend text with intro text', ->
-          expect( @$element.find('.tweet-text').first().text() ).toBe 'intro text - some text' 
+          expect( @$element.find('.tweet-text').first().text() ).toBe 'intro text - some text'
 
         it 'should wrap the intro text in a span with intro-text css class', ->
           expect( @$element.find('span.intro-text').first().text() ).toBe 'intro text - '
@@ -146,7 +109,7 @@ describe 'miniFeed', ->
     describe 'outroText', ->
       it 'should not add any outro text by default', ->
         mockResponseWithOptions( @$element )
-        
+
         expect( @$element.find('.tweet-text').first().text() ).toBe( 'some text' )
 
       describe 'with outro text', ->
@@ -154,7 +117,7 @@ describe 'miniFeed', ->
           mockResponseWithOptions( @$element, { outroText: ' - outro text' } )
 
         it 'should prepend text with outro text', ->
-          expect( @$element.find('.tweet-text').first().text() ).toBe 'some text - outro text' 
+          expect( @$element.find('.tweet-text').first().text() ).toBe 'some text - outro text'
 
         it 'should wrap the outro text in a span with outro-text css class', ->
           expect( @$element.find('span.outro-text').first().text() ).toBe ' - outro text'
@@ -232,7 +195,7 @@ describe 'miniFeed', ->
 
       it 'should display the time in a classic format when specified', ->
         mockResponseWithOptions( @$element, { timeFormat: 'normal' } )
-        
+
         expect( @$element.find('.tweet-time').first().text() ).not.toMatch /ago$/
 
   describe 'generated markup', ->
@@ -340,7 +303,7 @@ describe 'miniFeed', ->
       @callback = jasmine.createSpy( 'callback' )
 
     it 'should call on load before loading the tweets', ->
-      new $.miniFeed( @$element, { onLoad: @callback } )  
+      new $.miniFeed( @$element, { onLoad: @callback } )
 
       expect( @callback ).toHaveBeenCalledWith(@$element)
 

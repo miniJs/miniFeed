@@ -84,15 +84,7 @@ Tweet = (function() {
   };
 
   Tweet.apiUrl = function(options) {
-    var apiUrl;
-    apiUrl = "https://api.twitter.com/1/statuses/user_timeline.json?";
-    apiUrl += "screen_name=" + options.username;
-    apiUrl += "&count=" + options.limit;
-    if (!options.hideRetweets) {
-      apiUrl += "&include_rts=true";
-    }
-    apiUrl += "&callback=?";
-    return apiUrl;
+    return "http://twitcher.steer.me/user_timeline/" + options.username;
   };
 
   return Tweet;
@@ -116,19 +108,21 @@ TweetCollection = (function() {
   };
 
   TweetCollection.prototype.formattedTweets = function() {
-    var $li, $ul, index, tweet, _i, _len, _ref;
+    var $li, $ul, index, realIndex, tweet, _i, _len, _ref;
     $ul = $('<ul />', {
       'class': this.options.listClass
     });
+    realIndex = 0;
     _ref = this.tweets;
     for (index = _i = 0, _len = _ref.length; _i < _len; index = ++_i) {
       tweet = _ref[index];
-      if (!(this.options.hideReplies && tweet.isReply())) {
+      if (!((this.options.hideReplies && tweet.isReply()) || (this.options.limit && this.options.limit <= realIndex))) {
         $li = $('<li />', {
           'class': tweet.listItemClass(index, this.size())
         });
         $li.append(tweet.content());
         $li.appendTo($ul);
+        realIndex++;
       }
     }
     return $ul;
@@ -205,7 +199,6 @@ $(function() {
       avatarSize: '48',
       avatarClass: 'tweet-avatar',
       tweetClass: 'tweet-text',
-      hideRetweets: false,
       hideReplies: false,
       timeFormat: 'relative',
       timeClass: 'tweet-time',
